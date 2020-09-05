@@ -1,3 +1,9 @@
+For the final project of my MSc in Software Development at the University of Glasgow, I investigated using machine learning to predict sentence formality classifications.
+
+This repository contains my code, the data file I used (the original one and one that I added data fields to), files relating to testing the program, and a results spreadsheet.
+
+I will also be attaching my project report once it has been completed. 
+
 USER NOTES
 ----------
 
@@ -25,7 +31,7 @@ Dummy_Data_Before.csv is populated with 20 randomly generated sentences, and th
 
 Dummy_Data_After.csv contains additional data fields and data relating to the aforementioned sentences.
 
-SPREADSHEET:
+RESULTS SPREADSHEET:
 
 Formality_Classification_Results is a results spreadsheet containing the results of formality classification prediction tests.
 
