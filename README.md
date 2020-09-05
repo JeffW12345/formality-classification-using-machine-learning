@@ -1,6 +1,11 @@
 For the final project of my MSc in Software Development at the University of Glasgow, I investigated using machine learning to predict sentence formality classifications.
 
-This repository contains my code, the data file I used (the original one and one that I added data fields to), files relating to testing the program, and a results spreadsheet.
+This repository contains:
+
+- My code (which is written in Python and uses scikit-learn).
+- The data file I used for the test (the original data file and that I added data fields to)
+- Files relating to testing the program (a dummy spreadsheet before and after new data was written to it, and the console ouput of tests performed on the 'after' version.
+- A results spreadsheet.
 
 I will also be attaching my project report once it has been completed. 
 
