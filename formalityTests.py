@@ -6,7 +6,6 @@ To run a test, uncomment the required function(s) at the bottom of the file:
 bagOfWordsOnlyTest()
 testFeaturesNoBagOfWords()
 testFeaturesIncBagOfWords()
-randomBOWData() - This is used purely for benchmarking purposes.
 
 For the bag of words only non-random test function, bagOfWordsOnlyTest(), the required vectorizer will need to be
 selected. There are notes about this above the function.
@@ -94,7 +93,7 @@ def loadData():
 # test to the console.
 
 
-def classificationResults(feature, results, xAxisLabel, classifier):
+def classificationResults(feature, results, featureToTest, classifier):
     #  The two lines below convert the lists passed into the function to arrays.
     X = np.array(feature)
     y = np.array(results)
@@ -162,13 +161,13 @@ def classificationResults(feature, results, xAxisLabel, classifier):
     y_scores = y_scores[:, 1]
     rocAreaUnderCurve = roc_auc_score(y_test, y_scores)
     # Console output
-    print("\n" + classifier, " results\n")
-    print("TRUE POSITIVE: ", truePositives)
-    print("FALSE POSITIVE: ", falsePositives)
-    print("TRUE NEGATIVE: ", trueNegatives)
-    print("FALSE NEGATIVE: ", falseNegatives)
-    print("X axis: ", xAxisLabel, " Y axis: Whether formal or informal sentence")
+    print("\nFeature tested: ", featureToTest)
+    print("Classifier: " + classifier, "\n")
     print("Total predictions: ", numberInList)
+    print("TRUE POSITIVES: ", truePositives)
+    print("FALSE POSITIVES: ", falsePositives)
+    print("TRUE NEGATIVES: ", trueNegatives)
+    print("FALSE NEGATIVES: ", falseNegatives)
     # Division by zero is illegal, so if the denominator is zero, then 'N/A' is given as the metric's value.
     if accuracy > 0:
         print("Accuracy: %3.2f" % accuracy)
@@ -183,10 +182,10 @@ def classificationResults(feature, results, xAxisLabel, classifier):
     else:
         print("Recall: N/A")
     if fallout > 0:
-        print("False positive rate (fall-out) %3.2f" % fallout)
+        print("False positive rate: %3.2f" % fallout)
     else:
         print("False positive rate: N/A")
-    print("ROC %3.2f" % rocAreaUnderCurve)
+    print("AUC: %3.2f" % rocAreaUnderCurve)
     print("Balanced accuracy: %3.2f" % balAccuracy)
 '''
 In the function below, the line where corpusVector is instantiated needs to be amended as follows, depending on the
@@ -273,32 +272,32 @@ def bagOfWordsOnlyTest():
     corpusVectorAsArray = fittedCorpusVector.toarray()
 
     # Support Vector Machine classifier test
-    xAxisLabel = "Bag of words test for formality classification."
+    featureToTest = "N-gram only test"
     feature = corpusVectorAsArray
     results = documentClassification
-    classifier = 'SVM'
-    classificationResults(feature, results, xAxisLabel, classifier)  # Comment out if not required
+    classifier = 'Support Vector Machine'
+    classificationResults(feature, results, featureToTest, classifier)  # Comment out if not required
 
     # Logistical regression classifier test
-    xAxisLabel = "Bag of words test for formality classification."
+    featureToTest = "N-gram only test"
     feature = corpusVectorAsArray
     results = documentClassification
     classifier = 'Logistic Regression'
-    classificationResults(feature, results, xAxisLabel, classifier)  # Comment out if not required
+    classificationResults(feature, results, featureToTest, classifier)  # Comment out if not required
 
     # Multinomial Naive Bayes classifier test
-    xAxisLabel = "Bag of words test for formality classification."
+    featureToTest = "N-gram only test"
     feature = corpusVectorAsArray
     results = documentClassification
     classifier = 'Multinomial Bayes'
-    classificationResults(feature, results, xAxisLabel, classifier)  # Comment out if not required
+    classificationResults(feature, results, featureToTest, classifier)  # Comment out if not required
 
     # Random Forest classifier test
-    xAxisLabel = "Bag of words test for formality classification."
+    featureToTest = "N-gram only test"
     feature = corpusVectorAsArray
     results = documentClassification
     classifier = 'Random forest'
-    classificationResults(feature, results, xAxisLabel, classifier)  # Comment out if not required
+    classificationResults(feature, results, featureToTest, classifier)  # Comment out if not required
 
 
 # For tests not including n-grams only.
@@ -328,11 +327,12 @@ def testFeaturesNoBagOfWords():
             dataThisLine.append(record[references])
             if count == numberOfFields:
                 featuresToTestDataList.append(dataThisLine)
-    xAxisLabel = "Feature(s) to test"  # Amend as appropriate
+    featureToTest = "Informativeness"  # Amend as appropriate
     results = documentClassification
-    classifier = 'SVM'  # Can be changed to 'Logistic Regression', 'Multinomial Bayes' and 'Random forest' as required.
+    # Classifier below can be changed to 'Logistic Regression', 'Multinomial Bayes' and 'Random forest' as required.
+    classifier = 'Support Vector Machine'
     feature = featuresToTestDataList
-    classificationResults(feature, results, xAxisLabel, classifier)
+    classificationResults(feature, results, featureToTest, classifier)
 
 
 # For tests where non n-gram indicator(s) are being tested alongside an n-gram.
@@ -368,16 +368,18 @@ def testFeaturesIncBagOfWords():
     corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(1, 1))  # Amend as applicable
     fittedCorpusVector = corpusVector.fit_transform(corpus)
     corpusVectorAsArray = fittedCorpusVector.toarray()
-    xAxisLabel = "Test description"  # You can add a description of features to be tested here.
+    # You can add a description of features to be tested in the line below, to keep track of what is being tested.
+    featureToTest = "Number of adverbs, adjectives and prepositions plus unigrams"
     results = documentClassification
-    classifier = 'SVM'  # Can be changed to 'Logistic Regression', 'Multinomial Bayes' and 'Random forest' as required.
+    # On line below, classifier be changed to 'Logistic Regression', 'Multinomial Bayes' or 'Random forest'.
+    classifier = 'Support Vector Machine'
     feature = []
     recordNum = 0
     # Add the line's relevant variable to the end of the bag of words vector for that line and store in feature[].
     for documentBagsOfWords in corpusVectorAsArray:
         feature.append(np.hstack((documentBagsOfWords, featuresToTestDataList[recordNum])))
         recordNum = recordNum + 1
-    classificationResults(feature, results, xAxisLabel, classifier)
+    classificationResults(feature, results, featureToTest, classifier)
 
 
 # METHOD CALLS (uncomment as applicable)
