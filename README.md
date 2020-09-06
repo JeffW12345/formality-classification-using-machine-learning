@@ -2,7 +2,7 @@ For the final project of my MSc in Software Development at the University of Gla
 
 This repository contains:
 
-- My code (which is written in Python and uses scikit-learn).
+- My code (which is written in Python and uses scikit-learn), along with a requirements.txt file. 
 - The data file I used for the test (the original data file and that I added data fields to)
 - Files relating to testing the program (a dummy spreadsheet before and after new data was written to it, and the console ouput of tests performed on the 'after' version.
 - A results spreadsheet.
