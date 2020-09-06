@@ -93,7 +93,7 @@ def loadData():
 # test to the console.
 
 
-def classificationResults(feature, results, featureToTest, classifier):
+def classificationResults(feature, results, featureDescription, classifier):
     #  The two lines below convert the lists passed into the function to arrays.
     X = np.array(feature)
     y = np.array(results)
@@ -161,7 +161,7 @@ def classificationResults(feature, results, featureToTest, classifier):
     y_scores = y_scores[:, 1]
     rocAreaUnderCurve = roc_auc_score(y_test, y_scores)
     # Console output
-    print("\nFeature tested: ", featureToTest)
+    print("\nFeature tested: ", featureDescription)
     print("Classifier: " + classifier, "\n")
     print("Total predictions: ", numberInList)
     print("TRUE POSITIVES: ", truePositives)
@@ -272,32 +272,32 @@ def bagOfWordsOnlyTest():
     corpusVectorAsArray = fittedCorpusVector.toarray()
 
     # Support Vector Machine classifier test
-    featureToTest = "N-gram only test"
+    featureDescription = "N-gram only test"
     feature = corpusVectorAsArray
     results = documentClassification
     classifier = 'Support Vector Machine'
-    classificationResults(feature, results, featureToTest, classifier)  # Comment out if not required
+    classificationResults(feature, results, featureDescription, classifier)  # Comment out if not required
 
     # Logistical regression classifier test
-    featureToTest = "N-gram only test"
+    featureDescription = "N-gram only test"
     feature = corpusVectorAsArray
     results = documentClassification
     classifier = 'Logistic Regression'
-    classificationResults(feature, results, featureToTest, classifier)  # Comment out if not required
+    classificationResults(feature, results, featureDescription, classifier)  # Comment out if not required
 
     # Multinomial Naive Bayes classifier test
-    featureToTest = "N-gram only test"
+    featureDescription = "N-gram only test"
     feature = corpusVectorAsArray
     results = documentClassification
     classifier = 'Multinomial Bayes'
-    classificationResults(feature, results, featureToTest, classifier)  # Comment out if not required
+    classificationResults(feature, results, featureDescription, classifier)  # Comment out if not required
 
     # Random Forest classifier test
-    featureToTest = "N-gram only test"
+    featureDescription = "N-gram only test"
     feature = corpusVectorAsArray
     results = documentClassification
     classifier = 'Random forest'
-    classificationResults(feature, results, featureToTest, classifier)  # Comment out if not required
+    classificationResults(feature, results, featureDescription, classifier)  # Comment out if not required
 
 
 # For tests not including n-grams only.
@@ -327,12 +327,12 @@ def testFeaturesNoBagOfWords():
             dataThisLine.append(record[references])
             if count == numberOfFields:
                 featuresToTestDataList.append(dataThisLine)
-    featureToTest = "Informativeness"  # Amend as appropriate
+    featureDescription = "Informativeness"  # Amend as appropriate
     results = documentClassification
     # Classifier below can be changed to 'Logistic Regression', 'Multinomial Bayes' and 'Random forest' as required.
     classifier = 'Support Vector Machine'
     feature = featuresToTestDataList
-    classificationResults(feature, results, featureToTest, classifier)
+    classificationResults(feature, results, featureDescription, classifier)
 
 
 # For tests where non n-gram indicator(s) are being tested alongside an n-gram.
@@ -369,7 +369,7 @@ def testFeaturesIncBagOfWords():
     fittedCorpusVector = corpusVector.fit_transform(corpus)
     corpusVectorAsArray = fittedCorpusVector.toarray()
     # You can add a description of features to be tested in the line below, to keep track of what is being tested.
-    featureToTest = "Number of adverbs, adjectives and prepositions plus unigrams"
+    featureDescription = "Number of adverbs, adjectives and prepositions plus unigrams"
     results = documentClassification
     # On line below, classifier be changed to 'Logistic Regression', 'Multinomial Bayes' or 'Random forest'.
     classifier = 'Support Vector Machine'
@@ -379,7 +379,7 @@ def testFeaturesIncBagOfWords():
     for documentBagsOfWords in corpusVectorAsArray:
         feature.append(np.hstack((documentBagsOfWords, featuresToTestDataList[recordNum])))
         recordNum = recordNum + 1
-    classificationResults(feature, results, featureToTest, classifier)
+    classificationResults(feature, results, featureDescription, classifier)
 
 
 # METHOD CALLS (uncomment as applicable)
