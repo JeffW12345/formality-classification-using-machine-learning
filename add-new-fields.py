@@ -10,6 +10,8 @@ from nltk.corpus import stopwords
 from nltk.tokenize import SyllableTokenizer
 from nltk import word_tokenize
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from collections import Counter
+
 # Downloads for NLTK, which is a library that is used for labelling words as nouns, verbs, etc and counting syllables
 nltk.download('cmudict')
 nltk.download('punkt')
@@ -81,12 +83,10 @@ def loadData():
     print("\nNo of records uploaded: ", len(corpus))
 
 
-# Returns a list of 'rankDepth' most common words in the corpus. If there are 'n' items of equal frequency, then they
-# will all have the same ranking, and the next item will be ranked at the frequency of the item above those items in the
-# list, plus n + 1.
+# Returns a list of most common words in the corpus, with rankDepth being the ranking when the words are ordered by
+# frequency. Returns a list of words up to and including that ranking.
 
-
-def getTopWordsInCorpus(corpusOfDocuments, rankDepth):
+def getTopWordsInCorpus(rankDepth):
     topWordsList = []
     # Creates a dictionary containing every word in the corpus as a key, and the frequency of occurrence as value.
     wordsInCorpus = {}
@@ -104,26 +104,38 @@ def getTopWordsInCorpus(corpusOfDocuments, rankDepth):
     # List of word counts and words in descending order by word count. Line below adapted from:
     # https://careerkarma.com/blog/python-sort-a-dictionary-by-value/
     wordFreqList = sorted(wordsInCorpus.items(), key=lambda x: x[1], reverse=True)
-    rank = 0
-    count = 0
-    countEquallyRanked = 0
-    for entries in wordFreqList:
-        if count == 0 and entries[0] != "":
-            topWordsList.append(entries[0])
-            prevEntryFrequency = entries[1]
-            count = count + 1
-            rank = rank + 1
+    # Puts the dictionary's keys and values into separate lists
+    frequencyKeyList = []  # What is the word?
+    frequencyValList = []  # How frequently does the word appear in the corpus?
+    for entry in wordFreqList:
+        frequencyKeyList.append(entry[0])
+        frequencyValList.append(entry[1])
+    topValList = []  # List of word frequency values, containing with the top 'rankDepth' number of items
+    currentRank = 1
+    numInstancesThisVal = 1
+    isFirstVal = True
+    previousVal = 0
+    #  Finds finds the top 'rankDepth' greatest 'word frequency within corpus' values and appends them to topValList.
+    for value in frequencyValList:
+        print(value)
+        if isFirstVal:
+            previousVal = value
+            isFirstVal = False
+            topValList.append(value)
             continue
-        if (rank + countEquallyRanked) < rankDepth and entries[1] < prevEntryFrequency and entries[0] != "":
-            topWordsList.append(entries[0])
-            rank = rank + countEquallyRanked + 1
-            prevEntryFrequency = entries[1]
-            continue
-        if rank < rankDepth and entries[1] == prevEntryFrequency and entries[0] != "":
-            topWordsList.append(entries[0])
-            countEquallyRanked = countEquallyRanked + 1
+        if value == previousVal:
+            numInstancesThisVal = numInstancesThisVal + 1
+            if currentRank <= rankDepth:
+                topValList.append(value)
+        else:
+            currentRank = currentRank + numInstancesThisVal
+            previousVal = value
+            numInstancesThisVal = 1
+            # Add word to topWordsList when its ranking is <= rankDepth and it is different to the previous word.
+            if currentRank <= rankDepth:
+                topValList.append(value)
+    topWordsList.append(frequencyKeyList[:len(topValList)])  # Appends the top 'rankDepth' words to topWordsList.
     return topWordsList
-
 
 # Returns the number of words in the document which are in the 'topWordsInCorpus' list, which is a list of the most
 # frequently occurring words in the corpus of sentences.
@@ -227,7 +239,6 @@ def syllableCount(cleansedWordsList):
     averageNumSyllableList.append(averageNumSyllables)
 
 # How frequently does each word appear in the sentence on average? Appends the answer to the relevant list.
-
 
 def wordFreqThisDoc(cleansedWordsList):
     listOfFrequencies = []
@@ -336,8 +347,7 @@ def extractData():
         numLessThanFiveCharsList.append(numWordsLessThanLength(cleansedWordsList, 5))  # Num words with < 5 chars
         numCapitalisedWords(cleansedWordsList)  # Number of capitalised words
         VADERScore(document)  # The sentence's VADER sentiment score
-        # Number of words in sentence from top 35 most common words in corpus
-        top35WordsList = getTopWordsInCorpus(corpus, 35)
+        top35WordsList = getTopWordsInCorpus(35)  # Number of words in sentence from top 35 most common words in corpus.
         numOfWordsInTop35.append(getNumTopWordsInDocument(cleansedWordsList, top35WordsList))
 
 
