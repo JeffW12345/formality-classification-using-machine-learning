@@ -1,21 +1,12 @@
 '''
-This file is used to run tests using data loaded via the loadData() function.
 
-To run a test, uncomment the required function(s) at the bottom of the file:
+This module is for tests using only n-grams (i.e. not also including any other features).
 
-bagOfWordsOnlyTest()
-testFeaturesNoBagOfWords()
-testFeaturesIncBagOfWords()
+If other features are to be tested in addition to n-grams, use ngram-and-non-ngram-tests-combined.py.
 
-For the bag of words only non-random test function, bagOfWordsOnlyTest(), the required vectorizer will need to be
-selected. There are notes about this above the function.
+If n-grams are not being employed, use non-ngram-tests-only.py.
 
-For the bag of words which tests non n-gram indicators, testFeaturesNoBagOfWords(), the indicators to be tested will
-first need to be selected. These correspond with the field heading names in the data file. There are instructions
-about this in the function's notes.
-
-For the tests involving both n-grams and non n-gram indicators, testFeaturesIncBagOfWords(), both the required
-vectorizer and the indicators to be tested need to be selected.
+NB The vectorizer that is required will need to be selected. See notes beginning on line 181.
 
 '''
 import numpy as np
@@ -28,7 +19,6 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.feature_extraction.text import CountVectorizer
-import random
 
 corpus = []  # List of sentences in human-readable form (i.e. not in a bag of words representation).
 documentClassification = []  # Stored as strings - true = formal, false = informal.
@@ -187,6 +177,7 @@ def classificationResults(feature, results, featureDescription, classifier):
         print("False positive rate: N/A")
     print("AUC: %3.2f" % rocAreaUnderCurve)
     print("Balanced accuracy: %3.2f" % balAccuracy)
+
 '''
 In the function below, the line where corpusVector is instantiated needs to be amended as follows, depending on the
 test to be carried out. Remove stop_words='english' if you want to include stop words in the test. 
@@ -262,9 +253,6 @@ YOU DON'T REQUIRE RESULTS FOR.
 
 '''
 
-# For n-gram only tests.
-
-
 def bagOfWordsOnlyTest():
     # NB CHANGE THE LINE BELOW AS APPROPRIATE USING THE OPTION FROM THE COMMENT SECTION ABOVE.
     corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(1, 1))
@@ -300,91 +288,6 @@ def bagOfWordsOnlyTest():
     classificationResults(feature, results, featureDescription, classifier)  # Comment out if not required
 
 
-# For tests not including n-grams only.
-
-
-def testFeaturesNoBagOfWords():
-    featureNamesList = []
-    featureIndexList = []
-    # Append features to test to featureNamesList. Uncomment and change as appropriate.
-    # The features are the field names as they appear in the first row of the data CSV file.
-    featureNamesList.append('Informativeness')
-    # Obtains the index positions of the features above from the list of field headers, to test and puts the indexes in
-    # a list
-    for fieldName in featureNamesList:
-        featureIndex = dataFileFieldNames.index(fieldName)
-        featureIndexList.append(featureIndex)
-    # Goes through every record in the data file, and adds the relevant data from that record to a list, which is
-    # stored in a list of lists (featuresToTestDataList).
-    featuresToTestDataList = []  # A list of instances of the variables to test
-    numberOfFields = len(featureIndexList)
-    for record in nonDocumentData:
-        dataThisLine = []
-        count = 0
-        for references in featureIndexList:
-            count = count + 1
-            record[references] = float(record[references])
-            dataThisLine.append(record[references])
-            if count == numberOfFields:
-                featuresToTestDataList.append(dataThisLine)
-    featureDescription = "Informativeness"  # Amend as appropriate
-    results = documentClassification
-    # Classifier below can be changed to 'Logistic Regression', 'Multinomial Bayes' and 'Random forest' as required.
-    classifier = 'Support Vector Machine'
-    feature = featuresToTestDataList
-    classificationResults(feature, results, featureDescription, classifier)
-
-
-# For tests where non n-gram indicator(s) are being tested alongside an n-gram.
-
-
-def testFeaturesIncBagOfWords():
-    featureNamesList = []
-    # Append features to test to featureNamesList. Uncomment or delete any existing ones not required.
-    # The features are the field names as they appear in the first row of the data CSV file.
-    featureNamesList.append('Number of adverbs')
-    featureNamesList.append('Number of adjectives')
-    featureNamesList.append('Number of prepositions')
-
-    # Obtain indexes of features to test and put them in a list
-    featureIndexList = []
-    for fieldNames in featureNamesList:
-        featureIndex = dataFileFieldNames.index(fieldNames)
-        featureIndexList.append(featureIndex)
-    # Goes through every record in the data file, and adds the relevant data from that record to a list, which is
-    # stored in a list of lists (featuresToTestDataList).
-    featuresToTestDataList = []  # A list of instances of the variables to test
-    numberOfFields = len(featureIndexList)
-    for records in nonDocumentData:
-        dataThisLine = []
-        count = 0
-        for references in featureIndexList:
-            count = count + 1
-            records[references] = float(records[references])
-            dataThisLine.append(records[references])
-            if count == numberOfFields:
-                featuresToTestDataList.append(dataThisLine)
-    # Bag of words variables:
-    corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(1, 1))  # Amend as applicable
-    fittedCorpusVector = corpusVector.fit_transform(corpus)
-    corpusVectorAsArray = fittedCorpusVector.toarray()
-    # You can add a description of features to be tested in the line below, to keep track of what is being tested.
-    featureDescription = "Number of adverbs, adjectives and prepositions plus unigrams"
-    results = documentClassification
-    # On line below, classifier be changed to 'Logistic Regression', 'Multinomial Bayes' or 'Random forest'.
-    classifier = 'Support Vector Machine'
-    feature = []
-    recordNum = 0
-    # Add the line's relevant variable to the end of the bag of words vector for that line and store in feature[].
-    for documentBagsOfWords in corpusVectorAsArray:
-        feature.append(np.hstack((documentBagsOfWords, featuresToTestDataList[recordNum])))
-        recordNum = recordNum + 1
-    classificationResults(feature, results, featureDescription, classifier)
-
-
-# METHOD CALLS (uncomment as applicable)
+# METHOD CALLS
 loadData()
-# bagOfWordsOnlyTest()
-testFeaturesNoBagOfWords()
-# testFeaturesIncBagOfWords()
-# randomBOWData()
+bagOfWordsOnlyTest()
