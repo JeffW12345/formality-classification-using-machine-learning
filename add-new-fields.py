@@ -117,7 +117,6 @@ def getTopWordsInCorpus(rankDepth):
     previousVal = 0
     #  Finds finds the top 'rankDepth' greatest 'word frequency within corpus' values and appends them to topValList.
     for value in frequencyValList:
-        print(value)
         if isFirstVal:
             previousVal = value
             isFirstVal = False
@@ -139,6 +138,7 @@ def getTopWordsInCorpus(rankDepth):
 
 # Returns the number of words in the document which are in the 'topWordsInCorpus' list, which is a list of the most
 # frequently occurring words in the corpus of sentences.
+
 
 def getNumTopWordsInDocument(cleansedWordsListForDocument, topWordsInCorpus):
     count = 0
@@ -239,6 +239,7 @@ def syllableCount(cleansedWordsList):
     averageNumSyllableList.append(averageNumSyllables)
 
 # How frequently does each word appear in the sentence on average? Appends the answer to the relevant list.
+
 
 def wordFreqThisDoc(cleansedWordsList):
     listOfFrequencies = []
