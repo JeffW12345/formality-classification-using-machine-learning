@@ -176,7 +176,7 @@ def classificationResults(feature, results, featureDescription, classifier):
 
 # For tests not including n-grams only. See notes at top of file.
 
-def testFeaturesNoBagOfWords():
+def setParameters():
     featureNamesList = []
     featureIndexList = []
     # Append features to test to featureNamesList. Uncomment and change as appropriate.
@@ -211,4 +211,4 @@ def testFeaturesNoBagOfWords():
 # METHOD CALLS
 
 loadData()
-testFeaturesNoBagOfWords()
+setParameters()

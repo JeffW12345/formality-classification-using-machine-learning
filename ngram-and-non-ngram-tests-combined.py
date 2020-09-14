@@ -254,7 +254,7 @@ YOU DON'T REQUIRE RESULTS FOR.
 '''
 
 
-def testFeaturesIncBagOfWords():
+def setParameters():
     featureNamesList = []
     # Append features to test to featureNamesList. Uncomment or delete any existing ones not required.
     # The features are the field names as they appear in the first row of the data CSV file.
@@ -301,4 +301,4 @@ def testFeaturesIncBagOfWords():
 # METHOD CALLS
 
 loadData()
-testFeaturesIncBagOfWords()
+setParameters()

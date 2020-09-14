@@ -253,7 +253,7 @@ YOU DON'T REQUIRE RESULTS FOR.
 
 '''
 
-def bagOfWordsOnlyTest():
+def setParameters():
     # NB CHANGE THE LINE BELOW AS APPROPRIATE USING THE OPTION FROM THE COMMENT SECTION ABOVE.
     corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(1, 1))
     fittedCorpusVector = corpusVector.fit_transform(corpus)
@@ -290,4 +290,4 @@ def bagOfWordsOnlyTest():
 
 # METHOD CALLS
 loadData()
-bagOfWordsOnlyTest()
+setParameters()
