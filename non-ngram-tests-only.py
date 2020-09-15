@@ -20,17 +20,16 @@ documentClassification = []  # Stored as strings - true = formal, false = inform
 formalityScoreList = []  # Mechanical Turk formality scores.
 nonDocumentData = []  # List of lists, each containing a sentence's attribute data.
 dataFileFieldNames = []  # The field names from the top of the data spreadsheet.
-
-# This function loads the data from the file and stores it in the data structures shown above.
-
 corpus = []  # List of sentences in human-readable form (i.e. not in a bag of words representation).
 documentClassification = []  # Stored as strings - true = formal, false = informal.
 formalityScoreList = []  # Mechanical Turk formality scores.
 nonDocumentData = []  # List of lists, each containing a sentence's attribute data.
 dataFileFieldNames = []  # The field names from the top of the data spreadsheet.
+fieldsToSelectFrom = []  # List of features that the user has not selected for the test.
+chosenFields = []  # List of features that the user has selected for the test.
+classifier = ""  # The classifier to be used.
 
-# This function loads the data from the file and stores it in the data structures shown above.
-# It is always the first function to be run.
+# This function loads the data from the file and stores it in the data structures
 
 
 def loadData():
@@ -99,7 +98,7 @@ def classificationResults(feature, results, featureDescription, classifier):
         model = LogisticRegression(random_state=0, solver='lbfgs',max_iter=1000).fit(X_train, y_train)
     if classifier == "Multinomial Bayes":
         model = MultinomialNB().fit(X_train, y_train)
-    if classifier == "Random forest":
+    if classifier == "Random Forest":
         model = RandomForestClassifier().fit(X_train, y_train)
     # Calls a method to generate a prediction for each sentence, and stores them in a list.
     predictions = model.predict(np.array(X_test))
@@ -174,17 +173,115 @@ def classificationResults(feature, results, featureDescription, classifier):
     print("Balanced accuracy: %3.2f" % balAccuracy)
 
 
-# For tests not including n-grams only. See notes at top of file.
+# Puts all feature field names into list 'fieldsToSelectFrom'.
+
+def createFeatureFieldList():
+    count = 0
+    for fieldName in dataFileFieldNames:
+        if count < (len(dataFileFieldNames)-1):
+            fieldsToSelectFrom.append(fieldName)
+            count = count + 1
+
+# Prints a list of fields that are available (excludes fields already selected by the user)
+
+
+def printAvailableFields():
+    count = 1
+    print("\nYou can add the following fields: \n")
+    for fieldName in fieldsToSelectFrom:
+        print(count, "-", fieldName)
+        count = count + 1
+
+# Asks the user to choose the features they want to test. Stores field names in 'chosenFields'.
+
+def askForFeatures():
+    featureChoice = ""
+    if not chosenFields:  # If no selections yet made by the user.
+        printAvailableFields()
+        print("\nNo features have been selected yet")
+        featureChoice = input("\nPlease choose the number of the feature you wish to add: ")
+        if featureChoice.isnumeric():
+            featureChoice = int(featureChoice)
+            # If a valid selection is made, adds the field name to chosenFields and removes it from fieldsToSelect.
+            if 0 <= featureChoice <= len(fieldsToSelectFrom):
+                chosenFields.append(fieldsToSelectFrom[featureChoice - 1])
+                fieldsToSelectFrom.remove(fieldsToSelectFrom[featureChoice - 1])
+                askForFeatures()
+            else:
+                print("You did not enter a valid number. Please try again.")
+                askForFeatures()
+        else:
+            print("You did not enter a number. Please try again.")
+            askForFeatures()
+    #  If the user has made at least one selection already
+    else:
+        printAvailableFields()
+        print("You have added the following features: ")
+        for fields in chosenFields:
+            print(fields)
+        printAvailableFields()
+        featureChoice = input("Please choose an additional feature or press C to select your classifier: ")
+        if featureChoice.isnumeric():
+            featureChoice = int(featureChoice)
+            # If a valid selection is made, adds the field name to chosenFields and removes it from fieldsToSelect.
+            if 0 <= featureChoice <= len(fieldsToSelectFrom):
+                chosenFields.append(fieldsToSelectFrom[featureChoice - 1])
+                fieldsToSelectFrom.remove(fieldsToSelectFrom[featureChoice - 1])
+                askForFeatures()
+            else:
+                print("You did not enter a valid number. Please try again.")
+                askForFeatures()
+        # Pressing 'C' exits the function.
+        elif featureChoice == "C":
+            return
+        #  If neither 'C' nor a number entered:
+        else:
+            print("You did not enter a number. Please try again.")
+            askForFeatures()
+
+
+# Asks the user to select a classifier.
+
+
+def askForClassifier():
+    print("\n The classifiers are: ")
+    print("1 - Support Vector Machine")
+    print("2 - Logistic Regression")
+    print("3 - Multinomial Bayes")
+    print("4 - Random Forest")
+    classifierChoice = input("\n Please choose a classifier by typing a number between 1 and 4: ")
+    if classifierChoice.isnumeric():
+        classifierChoice = int(classifierChoice)
+        if classifierChoice == 1:
+            print("You have selected Support Vector Machine")
+            global classifier
+            classifier = "Support Vector Machine"
+        if classifierChoice == 2:
+            print("You have selected Logistic Regression")
+            classifier = "Logistic Regression"
+        if classifierChoice == 3:
+            print("You have selected Multinomial Bayes")
+            classifier = "Multinomial Bayes"
+        if classifierChoice == 4:
+            print("You have selected Random Forest")
+            classifier = "Random Forest"
+        else:
+            print("That was not a valid selection. Please try again.")
+            askForClassifier()
+    else:
+        print("That was not a valid selection. Please try again.")
+        askForClassifier()
+    print("\n Please choose a classifier")
+
 
 def setParameters():
-    featureNamesList = []
-    featureIndexList = []
-    # Append features to test to featureNamesList. Uncomment and change as appropriate.
-    # The features are the field names as they appear in the first row of the data CSV file.
-    featureNamesList.append('Informativeness')
+    createFeatureFieldList()  # Puts all feature field names into list 'fieldsToSelectFrom'.
+    askForFeatures()  # Asks the user to choose the features they want to test. Stores field names in 'chosenFields'.
+    askForClassifier()  # Asks the user to choose a classifier. Stores the result in global variable 'classifier'.
     # Obtains the index positions of the features above from the list of field headers, to test and puts the indexes in
-    # a list
-    for fieldName in featureNamesList:
+    # a newly created list, featureIndexList.
+    featureIndexList = []
+    for fieldName in chosenFields:
         featureIndex = dataFileFieldNames.index(fieldName)
         featureIndexList.append(featureIndex)
     # Goes through every record in the data file, and adds the relevant data from that record to a list, which is
@@ -200,10 +297,8 @@ def setParameters():
             dataThisLine.append(record[references])
             if count == numberOfFields:
                 featuresToTestDataList.append(dataThisLine)
-    featureDescription = "Informativeness"  # Amend as appropriate
+    featureDescription = chosenFields
     results = documentClassification
-    # Classifier below can be changed to 'Logistic Regression', 'Multinomial Bayes' and 'Random forest' as required.
-    classifier = 'Support Vector Machine'
     feature = featuresToTestDataList
     classificationResults(feature, results, featureDescription, classifier)
 

@@ -21,22 +21,22 @@ from sklearn.svm import SVC
 from sklearn.feature_extraction.text import CountVectorizer
 
 corpus = []  # List of sentences in human-readable form (i.e. not in a bag of words representation).
-documentClassification = []  # Stored as strings - true = formal, false = informal.
+documentClassification = []  # Formal or informal? true = formal, false = informal.
 formalityScoreList = []  # Mechanical Turk formality scores.
 nonDocumentData = []  # List of lists, each containing a sentence's attribute data.
 dataFileFieldNames = []  # The field names from the top of the data spreadsheet.
-
-# This function loads the data from the file and stores it in the data structures shown above.
-
 corpus = []  # List of sentences in human-readable form (i.e. not in a bag of words representation).
 documentClassification = []  # Stored as strings - true = formal, false = informal.
 formalityScoreList = []  # Mechanical Turk formality scores.
 nonDocumentData = []  # List of lists, each containing a sentence's attribute data.
 dataFileFieldNames = []  # The field names from the top of the data spreadsheet.
+nGramType = ""  # The n-gram type (eg unigram, bigram, etc), as selected by the user.
+representation = "" # Binary, non-binary or TF-IDF
+stops = ""  # Are stop words included?
+classifier = ""  # The name of the classifier
 
-# This function loads the data from the file and stores it in the data structures shown above.
-# It is always the first function to be run.
 
+# This function loads the data from the file and stores it in global data structures.
 
 def loadData():
     with open('new_formality_data.csv', encoding='utf-8') as inputFile:
@@ -104,7 +104,7 @@ def classificationResults(feature, results, featureDescription, classifier):
         model = LogisticRegression(random_state=0, solver='lbfgs',max_iter=1000).fit(X_train, y_train)
     if classifier == "Multinomial Bayes":
         model = MultinomialNB().fit(X_train, y_train)
-    if classifier == "Random forest":
+    if classifier == "Random Forest":
         model = RandomForestClassifier().fit(X_train, y_train)
     # Calls a method to generate a prediction for each sentence, and stores them in a list.
     predictions = model.predict(np.array(X_test))
@@ -178,115 +178,243 @@ def classificationResults(feature, results, featureDescription, classifier):
     print("AUC: %3.2f" % rocAreaUnderCurve)
     print("Balanced accuracy: %3.2f" % balAccuracy)
 
-'''
-In the function below, the line where corpusVector is instantiated needs to be amended as follows, depending on the
-test to be carried out. Remove stop_words='english' if you want to include stop words in the test. 
 
-FOR TF-IDF TESTS:
+def askForType():
+    print("\nThe n-gram types are: ")
+    print("1 - Unigram")
+    print("2 - Bigram")
+    print("3 - Trigram")
+    print("4 - Unigram and bigram combined")
+    print("5 - Unigram, bigram and trigram combined")
+    userChoice = input("\nPlease enter the number corresponding to your selection: ")
+    if userChoice.isnumeric():
+        userChoice = int(userChoice)
+        if userChoice == 1:
+            global nGramType
+            nGramType = "unigram"
+            return
+        if userChoice == 2:
+            nGramType = "bigram"
+            return
+        if userChoice == 3:
+            nGramType = "trigram"
+            return
+        if userChoice == 4:
+            nGramType = "1, 2 gram"
+            return
+        if userChoice == 5:
+            nGramType = "1,2,3 gram"
+            return
+        else:
+            print("Invalid selection. Please try again")
+            askForType()
+    # If non-numeric value entered:
+    else:
+        print("Invalid selection. Please try again")
+        askForType()
 
-1. TF-IDF unigram tests:
+def askForRepresentation():
+    print("\n The representation options are: ")
+    print("1 - Binary")
+    print("2 - Non-Binary")
+    print("3 - TF-IDF")
+    userChoice = input("\nPlease enter the number corresponding to your selection: ")
+    if userChoice.isnumeric():
+        userChoice = int(userChoice)
+        if userChoice == 1:
+            global representation
+            representation = "binary"
+            return
+        if userChoice == 2:
+            representation = "non-binary"
+            return
+        if userChoice == 3:
+            representation = "TF-IDF"
+            return
+        else:
+            print("Invalid selection. Please try again")
+            askForRepresentation()
+    # If non-numeric value entered:
+    else:
+        print("Invalid selection. Please try again")
+        askForRepresentation()
 
-corpusVector = TfidfVectorizer(stop_words='english', ngram_range=(1, 1))
+def askForStops():
+    print("\nThe stop word options are: ")
+    print("1 - Include stop words")
+    print("2 - No not include stop words")
+    userChoice = input("\nPlease enter the number corresponding to your selection: ")
+    if userChoice.isnumeric():
+        userChoice = int(userChoice)
+        if userChoice == 1:
+            global stops
+            stops = "with stop words"
+            return
+        if userChoice == 2:
+            stops = "without stop words"
+            return
+        else:
+            print("Invalid selection. Please try again")
+            askForStops()
+    # If non-numeric value entered:
+    else:
+        print("Invalid selection. Please try again")
+        askForStops()
 
-2. TF-IDF bigram tests
-
-corpusVector = TfidfVectorizer(stop_words='english', ngram_range=(2, 2))
-
-3. TF-IDF trigram tests:
-
-corpusVector = TfidfVectorizer(stop_words='english', ngram_range=(3, 3))
-
-4. TF-IDF unigram and bigram combined tests:
-
-corpusVector = TfidfVectorizer(stop_words='english', ngram_range=(1, 2))
-
-5. TF-IDF trigram 1,2,3 tests (unigram, bigram and trigram combined):
-
-corpusVector = TfidfVectorizer(stop_words='english', ngram_range=(1, 3))
-
-FOR NON-BINARY TESTS: 
-
-1. Non-binary unigram tests:
-
-corpusVector = CountVectorizer(binary=False, stop_words='english', ngram_range=(1, 1))
-
-2. Non-binary bigram tests:
-
-corpusVector = CountVectorizer(binary=False, stop_words='english', ngram_range=(2, 2))
-
-3. Non-binary trigram tests:
-
-corpusVector = CountVectorizer(binary=False, stop_words='english', ngram_range=(3, 3))
-
-4. Non-binary unigram and bigram 1,2 tests:
-
-corpusVector = CountVectorizer(binary=False, stop_words='english', ngram_range=(1, 2))
-
-5. Non-binary trigram 1,2,3 tests (unigram, bigram and trigram combined):
-
-corpusVector = CountVectorizer(binary=False, stop_words='english', ngram_range=(1, 3))
-
-FOR BINARY TESTS:
-
-1. Binary unigram tests:
-
-corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(1, 1))
-
-2. Binary bigram tests:
-
-corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(2, 2))
-
-3. Binary trigram tests:
-
-corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(3, 3))
-
-4. Binary unigram and bigram combined tests:
-
-corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(1, 2))
-
-5. Binary trigram 1,2,3 tests:
-
-corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(1, 3))
-
-NB IN THE METHOD BELOW, COMMENT OUT THE CALL TO THE classificationResults FUNCTION FOR ANY CLASSIFERS THAT 
-YOU DON'T REQUIRE RESULTS FOR. 
-
-'''
+def askForClassifier():
+    print("\nThe classifiers are: ")
+    print("1 - Support Vector Machine")
+    print("2 - Logistic Regression")
+    print("3 - Multinomial Bayes")
+    print("4 - Random Forest")
+    userChoice = input("\nPlease enter the number corresponding to your selection: ")
+    if userChoice.isnumeric():
+        userChoice = int(userChoice)
+        if userChoice == 1:
+            global classifier
+            classifier = "Support Vector Machine"
+            return
+        if userChoice == 2:
+            classifier = "Logistic Regression"
+            return
+        if userChoice == 3:
+            classifier = "Multinomial Bayes"
+            return
+        if userChoice == 4:
+            classifier = "Random Forest"
+            return
+        else:
+            print("Invalid selection. Please try again")
+            askForClassifier()
+    # If non-numeric value entered:
+    else:
+        print("Invalid selection. Please try again")
+        askForClassifier()
 
 def setParameters():
-    # NB CHANGE THE LINE BELOW AS APPROPRIATE USING THE OPTION FROM THE COMMENT SECTION ABOVE.
+    askForType()
+    askForRepresentation()
+    askForStops()
+    askForClassifier()
+
+    # Line below used so that the changes to corpusVectorizer in the code below are in scope of the code beneath
+    # the if statements.
     corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(1, 1))
-    fittedCorpusVector = corpusVector.fit_transform(corpus)
-    corpusVectorAsArray = fittedCorpusVector.toarray()
 
-    # Support Vector Machine classifier test
-    featureDescription = "N-gram only test"
+    # UNIGRAMS
+
+    # Unigram, binary representation, stop words included.
+    if nGramType == "unigram" and representation == "binary" and stops == "with stop words":
+        corpusVector = CountVectorizer(binary=True, ngram_range=(1, 1))
+    # Unigram, binary representation, stop words excluded.
+    if nGramType == "unigram" and representation == "binary" and stops == "without stop words":
+        corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(1, 1))
+    # Unigram, non-binary representation, stop words included.
+    if nGramType == "unigram" and representation == "non-binary" and stops == "with stop words":
+        corpusVector = CountVectorizer(binary=False, ngram_range=(1, 1))
+    # Unigram, non-binary representation, stop words excluded.
+    if nGramType == "unigram" and representation == "non-binary" and stops == "without stop words":
+        corpusVector = CountVectorizer(binary=False, stop_words='english', ngram_range=(1, 1))
+    # Unigram, TF-IDF representation, stop words included.
+    if nGramType == "unigram" and representation == "TF-IDF" and stops == "with stop words":
+        corpusVector = TfidfVectorizer(ngram_range=(1, 1))
+    # Unigram, TF-IDF representation, stop words excluded.
+    if nGramType == "unigram" and representation == "TF-IDF" and stops == "without stop words":
+        corpusVector = TfidfVectorizer(stop_words='english', ngram_range=(1, 1))
+
+    # BIGRAMS
+
+    # Bigram, binary representation, stop words included.
+    if nGramType == "bigram" and representation == "binary" and stops == "with stop words":
+        corpusVector = CountVectorizer(binary=True, ngram_range=(2, 2))
+    # Bigram, binary representation, stop words excluded.
+    if nGramType == "bigram" and representation == "binary" and stops == "without stop words":
+        corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(2, 2))
+    # Bigram, non-binary representation, stop words included.
+    if nGramType == "bigram" and representation == "non-binary" and stops == "with stop words":
+        corpusVector = CountVectorizer(binary=False, ngram_range=(2, 2))
+    # Bigram, non-binary representation, stop words excluded.
+    if nGramType == "bigram" and representation == "non-binary" and stops == "without stop words":
+        corpusVector = CountVectorizer(binary=False, stop_words='english', ngram_range=(2, 2))
+    # Bigram, TF-IDF representation, stop words included.
+    if nGramType == "bigram" and representation == "TF-IDF" and stops == "with stop words":
+        corpusVector = TfidfVectorizer(ngram_range=(2, 2))
+    # Bigram, TF-IDF representation, stop words excluded.
+    if nGramType == "bigram" and representation == "TF-IDF" and stops == "without stop words":
+        corpusVector = TfidfVectorizer(stop_words='english', ngram_range=(2, 2))
+
+    # TRIGRAMS
+
+    # Trigram, binary representation, stop words included.
+    if nGramType == "trigram" and representation == "binary" and stops == "with stop words":
+        corpusVector = CountVectorizer(binary=True, ngram_range=(3, 3))
+    # Trigram, binary representation, stop words excluded.
+    if nGramType == "trigram" and representation == "binary" and stops == "without stop words":
+        corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(3, 3))
+    # Trigram, non-binary representation, stop words included.
+    if nGramType == "trigram" and representation == "non-binary" and stops == "with stop words":
+        corpusVector = CountVectorizer(binary=False, ngram_range=(3, 3))
+    # Trigram, non-binary representation, stop words excluded.
+    if nGramType == "trigram" and representation == "non-binary" and stops == "without stop words":
+        corpusVector = CountVectorizer(binary=False, stop_words='english', ngram_range=(3, 3))
+    # Trigram, TF-IDF representation, stop words included.
+    if nGramType == "trigram" and representation == "TF-IDF" and stops == "with stop words":
+        corpusVector = TfidfVectorizer(ngram_range=(3, 3))
+    # Trigram, TF-IDF representation, stop words excluded.
+    if nGramType == "trigram" and representation == "TF-IDF" and stops == "without stop words":
+        corpusVector = TfidfVectorizer(stop_words='english', ngram_range=(3, 3))
+
+    # UNIGRAMS AND BIGRAMS COMBINED
+
+    # Unigram and bigram combined, binary representation, stop words included.
+    if nGramType == "1, 2 gram" and representation == "binary" and stops == "with stop words":
+        corpusVector = CountVectorizer(binary=True, ngram_range=(1, 2))
+    # Unigram and bigram combined, binary representation, stop words excluded.
+    if nGramType == "1, 2 gram" and representation == "binary" and stops == "without stop words":
+        corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(1, 2))
+    # Unigram and bigram combined, non-binary representation, stop words included.
+    if nGramType == "1, 2 gram" and representation == "non-binary" and stops == "with stop words":
+        corpusVector = CountVectorizer(binary=False, ngram_range=(1, 2))
+    # Unigram and bigram combined, non-binary representation, stop words excluded.
+    if nGramType == "1, 2 gram" and representation == "non-binary" and stops == "without stop words":
+        corpusVector = CountVectorizer(binary=False, stop_words='english', ngram_range=(1, 2))
+    # Unigram and bigram combined, TF-IDF representation, stop words included.
+    if nGramType == "1, 2 gram" and representation == "TF-IDF" and stops == "with stop words":
+        corpusVector = TfidfVectorizer(ngram_range=(1, 2))
+    # Unigram and bigram combined, TF-IDF representation, stop words excluded.
+    if nGramType == "1, 2 gram" and representation == "TF-IDF" and stops == "without stop words":
+        corpusVector = TfidfVectorizer(stop_words='english', ngram_range=(1, 2))
+
+    # UNIGRAMS, BIGRAMS AND TRIGRAMS COMBINED
+
+    # Unigram, bigram and trigram combined, binary representation, stop words included.
+    if nGramType == "1, 2, 3 gram" and representation == "binary" and stops == "with stop words":
+        corpusVector = CountVectorizer(binary=True, ngram_range=(1, 3))
+    # Unigram, bigram and trigram combined, binary representation, stop words excluded.
+    if nGramType == "1, 2, 3 gram" and representation == "binary" and stops == "without stop words":
+        corpusVector = CountVectorizer(binary=True, stop_words='english', ngram_range=(1, 3))
+    # Unigram, bigram and trigram combined, non-binary representation, stop words included.
+    if nGramType == "1, 2, 3 gram" and representation == "non-binary" and stops == "with stop words":
+        corpusVector = CountVectorizer(binary=False, ngram_range=(1, 3))
+    # Unigram, bigram and trigram combined, non-binary representation, stop words excluded.
+    if nGramType == "1, 2, 3 gram" and representation == "non-binary" and stops == "without stop words":
+        corpusVector = CountVectorizer(binary=False, stop_words='english', ngram_range=(1, 3))
+    # Unigram, bigram and trigram combined, TF-IDF representation, stop words included.
+    if nGramType == "1, 2, 3 gram" and representation == "TF-IDF" and stops == "with stop words":
+        corpusVector = TfidfVectorizer(ngram_range=(1, 3))
+    # Unigram, bigram and trigram combined, TF-IDF representation, stop words excluded.
+    if nGramType == "1, 2, 3 gram" and representation == "TF-IDF" and stops == "without stop words":
+        corpusVector = TfidfVectorizer(stop_words='english', ngram_range=(1, 3))
+
+    fittedCorpusVector = corpusVector.fit_transform(corpus)  # Fits the n-gram configuration to the corpus of documents.
+    corpusVectorAsArray = fittedCorpusVector.toarray()  # Puts the fitted data in an array.
+    featureDescription = nGramType + " with " + representation + " representation and " + stops
+    print("You have chosen:", featureDescription)
+    print("\nYou chose the following classifier:", classifier)
+    print("\nPlease be patient - the program may take a while to run.")
     feature = corpusVectorAsArray
     results = documentClassification
-    classifier = 'Support Vector Machine'
-    classificationResults(feature, results, featureDescription, classifier)  # Comment out if not required
-
-    # Logistical regression classifier test
-    featureDescription = "N-gram only test"
-    feature = corpusVectorAsArray
-    results = documentClassification
-    classifier = 'Logistic Regression'
-    classificationResults(feature, results, featureDescription, classifier)  # Comment out if not required
-
-    # Multinomial Naive Bayes classifier test
-    featureDescription = "N-gram only test"
-    feature = corpusVectorAsArray
-    results = documentClassification
-    classifier = 'Multinomial Bayes'
-    classificationResults(feature, results, featureDescription, classifier)  # Comment out if not required
-
-    # Random Forest classifier test
-    featureDescription = "N-gram only test"
-    feature = corpusVectorAsArray
-    results = documentClassification
-    classifier = 'Random forest'
-    classificationResults(feature, results, featureDescription, classifier)  # Comment out if not required
-
+    classificationResults(feature, results, featureDescription, classifier)
 
 # METHOD CALLS
 loadData()
