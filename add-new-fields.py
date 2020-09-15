@@ -133,16 +133,18 @@ def getTopWordsInCorpus(rankDepth):
             # Add word to topWordsList when its ranking is <= rankDepth and it is different to the previous word.
             if currentRank <= rankDepth:
                 topValList.append(value)
-    topWordsList.append(frequencyKeyList[:len(topValList)])  # Appends the top 'rankDepth' words to topWordsList.
+    # Appends the top 'rankDepth' words to topWordsList.
+    for i in range(len(topValList)):
+        topWordsList.append(frequencyKeyList[i])
     return topWordsList
 
 # Returns the number of words in the document which are in the 'topWordsInCorpus' list, which is a list of the most
 # frequently occurring words in the corpus of sentences.
 
 
-def getNumTopWordsInDocument(cleansedWordsListForDocument, topWordsInCorpus):
+def getNumTopWordsInDocument(cleansedWordsList, topWordsInCorpus):
     count = 0
-    for words in cleansedWordsListForDocument:
+    for words in cleansedWordsList:
         if words.lower() in topWordsInCorpus:
             count = count + 1
     return count
@@ -331,6 +333,7 @@ def VADERScore(document):
 # populate lists with new data for each sentence.
 
 def extractData():
+    print("Processing data. This can take a while. Please be patient.")
     for document in corpus:
         extractGrammar(document)  # Finds number of each of the grammar type and puts the figures into lists.
         extractPunctuation(document)  # Gets number of various punctuation types and puts figures into lists.
@@ -348,7 +351,7 @@ def extractData():
         numLessThanFiveCharsList.append(numWordsLessThanLength(cleansedWordsList, 5))  # Num words with < 5 chars
         numCapitalisedWords(cleansedWordsList)  # Number of capitalised words
         VADERScore(document)  # The sentence's VADER sentiment score
-        top35WordsList = getTopWordsInCorpus(35)  # Number of words in sentence from top 35 most common words in corpus.
+        top35WordsList = getTopWordsInCorpus(35)  # Returns top 35 most common words in corpus.
         numOfWordsInTop35.append(getNumTopWordsInDocument(cleansedWordsList, top35WordsList))
 
 
@@ -402,6 +405,7 @@ def writeData():
                             [corpus[i]]
             allDataThisLine = ','.join(map(str, listOfStrings))  # This line's data as a comma-separated string
             outputFile.write(allDataThisLine)
+    print("New data successfully written to file.")
     outputFile.close()
 
 loadData()
