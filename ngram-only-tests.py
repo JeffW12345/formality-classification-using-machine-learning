@@ -30,10 +30,6 @@ documentClassification = []  # Stored as strings - true = formal, false = inform
 formalityScoreList = []  # Mechanical Turk formality scores.
 nonDocumentData = []  # List of lists, each containing a sentence's attribute data.
 dataFileFieldNames = []  # The field names from the top of the data spreadsheet.
-nGramType = ""  # The n-gram type (eg unigram, bigram, etc), as selected by the user.
-representation = "" # Binary, non-binary or TF-IDF
-stops = ""  # Are stop words included?
-classifier = ""  # The name of the classifier
 
 
 # This function loads the data from the file and stores it in global data structures.
@@ -188,9 +184,9 @@ def askForType():
     print("5 - Unigram, bigram and trigram combined")
     userChoice = input("\nPlease enter the number corresponding to your selection: ")
     if userChoice.isnumeric():
+        global nGramType
         userChoice = int(userChoice)
         if userChoice == 1:
-            global nGramType
             nGramType = "unigram"
             return
         if userChoice == 2:
@@ -220,9 +216,9 @@ def askForRepresentation():
     print("3 - TF-IDF")
     userChoice = input("\nPlease enter the number corresponding to your selection: ")
     if userChoice.isnumeric():
+        global representation
         userChoice = int(userChoice)
         if userChoice == 1:
-            global representation
             representation = "binary"
             return
         if userChoice == 2:
@@ -245,9 +241,9 @@ def askForStops():
     print("2 - No not include stop words")
     userChoice = input("\nPlease enter the number corresponding to your selection: ")
     if userChoice.isnumeric():
+        global stops
         userChoice = int(userChoice)
         if userChoice == 1:
-            global stops
             stops = "with stop words"
             return
         if userChoice == 2:
@@ -269,9 +265,9 @@ def askForClassifier():
     print("4 - Random Forest")
     userChoice = input("\nPlease enter the number corresponding to your selection: ")
     if userChoice.isnumeric():
+        global classifier
         userChoice = int(userChoice)
         if userChoice == 1:
-            global classifier
             classifier = "Support Vector Machine"
             return
         if userChoice == 2:
