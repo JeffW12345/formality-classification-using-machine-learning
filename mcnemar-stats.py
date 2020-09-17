@@ -1,6 +1,6 @@
 '''
 
-Calculates the McNemar statistic and states the p-value of the result. 
+Calculates the McNemar statistic and states the p-value of the result.
 
 Code below adapted from https://machinelearningmastery.com/mcnemars-test-for-machine-learning/
 
@@ -9,10 +9,10 @@ Code below adapted from https://machinelearningmastery.com/mcnemars-test-for-mac
 
 from statsmodels.stats.contingency_tables import mcnemar
 
-TP1 = input("For the first set of data, the null hypothesis, how many true positives are there?")
-FP1 = input("For the first set of data, the null hypothesis, how many false positives are there?")
-TN1 = input("For the first set of data, the null hypothesis, how many true negatives are there?")
-FN1 = input("For the first set of data, the null hypothesis, how many false negatives are there?")
+TP1 = input("For the first set of data, the baseline, how many true positives are there?")
+FP1 = input("For the first set of data, the baseline, how many false positives are there?")
+TN1 = input("For the first set of data, the baseline, how many true negatives are there?")
+FN1 = input("For the first set of data, the baseline, how many false negatives are there?")
 
 TP2 = input("For the second set of data, how many true positives are there?")
 FP2 = input("For the second set of data, how many false positives are there?")
@@ -24,7 +24,8 @@ incorrect1 = int(FP1) + int(FN1)
 correct2 = int(TP2) + int(TN2)
 incorrect2 = int(FP2) + int(FN2)
 
-print("For the first set of data, there are", correct1, "correct predictions and", incorrect1, "incorrect predictions.")
+print("For the first set of data, the base line, there are", correct1, "correct predictions and", incorrect1,
+      "incorrect predictions.")
 print("For the second set of data, there are", correct2, "correct predictions and", incorrect2,
       "incorrect predictions.")
 
@@ -41,8 +42,8 @@ print('statistic=%.3f, p-value=%.3f' % (result.statistic, result.pvalue))
 # interpret the p-value
 alpha = 0.05
 if result.pvalue > alpha:
-    print('\nMcNemar statistic=%.3f, p-value=%.3f . Same proportions of errors (fail to reject H0).\nThe results are '
-          'NOT significantly difference based on a p value of 5 percent.')
+    print('\nMcNemar statistic=%.3f, p-value=%.3f. Same proportions of errors (fail to reject H0).\nThe results are '
+          'NOT significantly different based on a p value of 5 percent.')
 else:
     print('\nMcNemar statistic=%.3f, p-value=%.3f. Different proportions of errors (reject H0).\nThe results are'
           'significantly different based on a p value of 5 percent.')
