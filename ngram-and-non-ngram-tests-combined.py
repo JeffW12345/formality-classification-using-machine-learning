@@ -203,7 +203,7 @@ def askForType():
             nGramType = "1, 2 gram"
             return
         if userChoice == 5:
-            nGramType = "1,2,3 gram"
+            nGramType = "1, 2, 3 gram"
             return
         else:
             print("Invalid selection. Please try again")
@@ -494,6 +494,24 @@ def askForNonNgramFeatures():
             askForNonNgramFeatures()
 
 
+def nonNGramFeatureDescription():
+    featureDesc = ""
+    count = 0
+    for feature in chosenFields:
+        count = count + 1
+        # If the first or only feature
+        if count == 1:
+            featureDesc = '\'' + feature + '\''
+            continue
+        # If not final feature in list of multiple features (but not the first)
+        if count != len(chosenFields):
+            featureDesc = featureDesc + ", " + '\'' + feature + '\''
+        # If final feature in list of multiple features
+        if count == len(chosenFields):
+            featureDesc = featureDesc + " and " + '\'' + feature + '\''
+    return featureDesc
+
+
 def setParameters():
     # Gets n-gram requirements from user and then puts them into a vector
     askForType()
@@ -527,20 +545,18 @@ def setParameters():
         # Add sentence's non n-gram feature data to featuresToTestDataList once it's been extracted to dataThisLine.
         featuresToTestDataList.append(dataThisLine)
 
-    # Asks the user which classifier the user requires
+    # Asks the user which classifier they require
     askForClassifier()
 
-    # Produces a description of the test specs for the console output:
-    global featureDesc
-    featureDesc = ""
-    for feature in chosenFields:
-        featureDesc = featureDesc + feature + " "
+    # Console output prior to test being run, to confirm the test details
+    nonNGramFeatures = nonNGramFeatureDescription()
     featureDescription = nGramType + " with " + representation + " representation and " + stops + \
-                         " with the following non n-gram features:\n" + featureDesc
+                         " with the following non n-gram features:\n" + nonNGramFeatures
     print("\nThis is a summary of the test to be carried out:\n" + featureDescription)
+    print("\nYour classifier is: ", classifier)
     print("\nThe test may take a while. Please be patient.")
 
-    # Append each line's non-ngram feature data to the end of the n-gram vector, and store in feature[].
+    # Appends each line's non-ngram feature data to the end of the n-gram vector, and store in feature[].
     featureData = []
     recordNum = 0
     for documentBagsOfWords in corpusVectorAsArray:
