@@ -1,6 +1,8 @@
 '''
 The functions in this file first upload data from the data file, using loadData(). They then create data for new fields,
-using extractData() and then write the original data and the new data back to the original data file, using writeData().
+using extractData(), and then write the original data and the new data back to the original data file, using writeData().
+
+Please make sure that original_formality_dataset.csv
 '''
 
 import nltk
@@ -10,13 +12,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import SyllableTokenizer
 from nltk import word_tokenize
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from collections import Counter
-
-# Downloads for NLTK, which is a library that is used for labelling words as nouns, verbs, etc and counting syllables
-nltk.download('cmudict')
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('stopwords')
+import sys
 
 # The lists that data loaded from original document will be put into.
 corpus = []  # List of sentences in human-readable form (i.e. not vectorized).
@@ -48,12 +44,38 @@ numCapitalisedWordsList = []
 VADERSentimentScoreList = []
 numOfWordsInTop35 = []
 numExistentialTheresList = []
+fileName = "original_formality_dataset.csv"
+
+
+def checkFileNameCorrect():
+    global fileName
+    print("The default file name is ", fileName, "/n")
+    print("If this is the name of the data file, press enter")
+    newFileName = input("Otherwise, enter the correct name, then press enter")
+    if newFileName != "":
+        fileName = newFileName
+        print("\nThe file name has been changed to", fileName, ".")
+    else:
+        print("\nThe file name remains", fileName, ".")
+
+
+# Checks if file present. Code for this module adapted from:
+# https://stackoverflow.com/questions/5627425/what-is-a-good-way-to-handle-exceptions-when-trying-to-read-a-file-in-python
+def checkFilePresent():
+    try:
+        f = open(fileName, 'rb')
+    except OSError:
+        print("Could not open/read file:", fileName,".")
+        print("Please ensure that the data file is in the same folder as the program file.")
+        print("Exiting program.")
+        sys.exit()
+
 
 # loadData() uploads data for each record from the existing csv file.
-
-
 def loadData():
-    with open('original_formality_dataset.csv', encoding='utf-8') as inputFile:
+    checkFileNameCorrect()
+    checkFilePresent()
+    with open(fileName, encoding='utf-8') as inputFile:
         firstLine = inputFile.readline()
         firstLineAsList = firstLine.split(",")
         # The sentence field is always the final field on the right. Therefore, the sentence index is the number of
@@ -221,7 +243,7 @@ def extractPunctuation(document):
 
 # Calculates the average number of syllables per word in the document and appends the relevant list with
 # the figure.
-# Code for this functionality adapted from code at:
+# Code for this function adapted from code at:
 # https://www.nltk.org/api/nltk.tokenize.html#nltk.tokenize.sonority_sequencing.SyllableTokenizer
 
 
@@ -334,6 +356,12 @@ def VADERScore(document):
 
 def extractData():
     print("Processing data. This can take a while. Please be patient.")
+    # Downloads for NLTK, which is a library that is used for labelling words as nouns, verbs, etc and counting
+    # syllables
+    nltk.download('cmudict')
+    nltk.download('punkt')
+    nltk.download('averaged_perceptron_tagger')
+    nltk.download('stopwords')
     for document in corpus:
         extractGrammar(document)  # Finds number of each of the grammar type and puts the figures into lists.
         extractPunctuation(document)  # Gets number of various punctuation types and puts figures into lists.
@@ -366,8 +394,10 @@ def writeData():
         # furthest field on the right).
         existingHeaders = inputFile.readline()
         existingHeadersAsList = existingHeaders.split(",")
+
         # How many fields (and therefore commas) up to and including the one immediately preceding the 'sentence' field?
-        sentenceIndex = existingHeadersAsList.index('Actual sentence\n')
+        sentenceIndex = len(existingHeadersAsList)-1
+
         # Additions to existing header.
         newHeaders = ['Number of adjectives', 'Number of verbs', 'Number of adverbs', 'Number of conjuctions',
                       'Number of nouns', 'Number of pronouns', 'Number of modal verbs', 'Number of prepositions',

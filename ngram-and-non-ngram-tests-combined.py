@@ -10,6 +10,7 @@ NB The vectorizer that is required will need to be selected. See notes beginning
 
 '''
 import numpy as np
+import sys
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import balanced_accuracy_score
@@ -33,13 +34,38 @@ dataFileFieldNames = []  # The field names from the top of the data spreadsheet.
 fieldsToSelectFrom = []  # List of features that the user has not selected for the test.
 chosenFields = []  # List of features that the user has selected for the test.
 classifier = ""  # The classifier to be used.
+fileName = "new_formality_data.csv"
+
+def checkFileNameCorrect():
+    global fileName
+    print("The default file name is ", fileName, "/n")
+    print("If this is the name of the data file, press enter")
+    newFileName = input("Otherwise, enter the correct name, then press enter")
+    if newFileName != "":
+        fileName = newFileName
+        print("\nThe file name has been changed to", fileName, ".")
+    else:
+        print("\nThe file name remains", fileName, ".")
+
+
+# Checks if file present. Code for this module adapted from:
+# https://stackoverflow.com/questions/5627425/what-is-a-good-way-to-handle-exceptions-when-trying-to-read-a-file-in-python
+def checkFilePresent():
+    try:
+        f = open(fileName, 'rb')
+    except OSError:
+        print("Could not open/read file:", fileName,".")
+        print("Please ensure that the data file is in the same folder as the program file.")
+        print("Exiting program.")
+        sys.exit()
+
 
 # This function loads the data from the file and stores it in the data structures shown above.
 # It is always the first function to be run.
-
-
 def loadData():
-    with open('new_formality_data.csv', encoding='utf-8') as inputFile:
+    checkFileNameCorrect()
+    checkFilePresent()
+    with open(fileName, encoding='utf-8') as inputFile:
         firstLine = inputFile.readline()
         firstLineAsList = firstLine.split(",")
         # Copy the data file field names into a global list:

@@ -14,6 +14,7 @@ from sklearn.metrics import roc_auc_score
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
+import sys
 
 corpus = []  # List of sentences in human-readable form (i.e. not in a bag of words representation).
 documentClassifications = []  # Stored as strings - true = formal, false = informal.
@@ -27,11 +28,37 @@ nonDocumentData = []  # List of lists, each containing a sentence's attribute da
 dataFileFieldNames = []  # The field names from the top of the data spreadsheet.
 fieldsToSelectFrom = []  # List of features that the user has not selected for the test.
 chosenFields = []  # List of features that the user has selected for the test.
+fileName = "new_formality_data.csv"
 
+
+def checkFileNameCorrect():
+    global fileName
+    print("The default file name is ", fileName, "/n")
+    print("If this is the name of the data file, press enter")
+    newFileName = input("Otherwise, enter the correct name, then press enter")
+    if newFileName != "":
+        fileName = newFileName
+        print("\nThe file name has been changed to", fileName, ".")
+    else:
+        print("\nThe file name remains", fileName, ".")
+
+
+# Checks if file present. Code for this module adapted from:
+# https://stackoverflow.com/questions/5627425/what-is-a-good-way-to-handle-exceptions-when-trying-to-read-a-file-in-python
+def checkFilePresent():
+    try:
+        f = open(fileName, 'rb')
+    except OSError:
+        print("Could not open/read file:", fileName,".")
+        print("Please ensure that the data file is in the same folder as the program file.")
+        print("Exiting program.")
+        sys.exit()
 
 # This function loads the data from the file and stores it in the data structures
 def loadData():
-    with open('new_formality_data.csv', encoding='utf-8') as inputFile:
+    checkFileNameCorrect()
+    checkFilePresent()
+    with open(fileName, encoding='utf-8') as inputFile:
         firstLine = inputFile.readline()
         firstLineAsList = firstLine.split(",")
         # Copy the data file field names into a global list:

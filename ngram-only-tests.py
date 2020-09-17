@@ -10,6 +10,7 @@ NB The vectorizer that is required will need to be selected. See notes beginning
 
 '''
 import numpy as np
+import sys
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import balanced_accuracy_score
@@ -30,12 +31,38 @@ documentClassifications = []  # Stored as strings - true = formal, false = infor
 formalityScoreList = []  # Mechanical Turk formality scores.
 nonDocumentData = []  # List of lists, each containing a sentence's attribute data.
 dataFileFieldNames = []  # The field names from the top of the data spreadsheet.
+fileName = "new_formality_data.csv"
+
+
+def checkFileNameCorrect():
+    global fileName
+    print("The default file name is ", fileName, "/n")
+    print("If this is the name of the data file, press enter")
+    newFileName = input("Otherwise, enter the correct name, then press enter")
+    if newFileName != "":
+        fileName = newFileName
+        print("\nThe file name has been changed to", fileName, ".")
+    else:
+        print("\nThe file name remains", fileName, ".")
+
+
+# Checks if file present. Code for this module adapted from:
+# https://stackoverflow.com/questions/5627425/what-is-a-good-way-to-handle-exceptions-when-trying-to-read-a-file-in-python
+def checkFilePresent():
+    try:
+        f = open(fileName, 'rb')
+    except OSError:
+        print("Could not open/read file:", fileName, ".")
+        print("Please ensure that the data file is in the same folder as the program file.")
+        print("Exiting program.")
+        sys.exit()
 
 
 # This function loads the data from the file and stores it in global data structures.
-
 def loadData():
-    with open('new_formality_data.csv', encoding='utf-8') as inputFile:
+    checkFileNameCorrect()
+    checkFilePresent()
+    with open(fileName, encoding='utf-8') as inputFile:
         firstLine = inputFile.readline()
         firstLineAsList = firstLine.split(",")
         # Copy the data file field names into a global list:
@@ -44,7 +71,7 @@ def loadData():
 
         # The sentence field is always the final field on the right. Therefore, the sentence index is the number of
         # fields up to and including the one immediately preceding the 'sentence' field.
-        sentenceIndex = len(firstLineAsList)-1
+        sentenceIndex = len(firstLineAsList) - 1
         for line in inputFile:
             # Searches through the line for commas, character by character. Stops when 'sentenceIndex' number of commas
             # have been encountered.
@@ -102,7 +129,7 @@ def classificationResults(feature, results, featureDescription, classifier):
     # the 'if' statements below it aren't out of scope of the rest of the module.
     model = SVC(gamma='scale', kernel='linear', probability=True).fit(X_train, y_train)
     if classifier == "Logistic Regression":
-        model = LogisticRegression(random_state=0, solver='lbfgs',max_iter=1000).fit(X_train, y_train)
+        model = LogisticRegression(random_state=0, solver='lbfgs', max_iter=1000).fit(X_train, y_train)
     if classifier == "Multinomial Bayes":
         model = MultinomialNB().fit(X_train, y_train)
     if classifier == "Random Forest":
@@ -220,6 +247,7 @@ def askForType():
         print("Invalid selection. Please try again")
         askForType()
 
+
 def askForRepresentation():
     print("\n The representation options are: ")
     print("1 - Binary")
@@ -246,6 +274,7 @@ def askForRepresentation():
         print("Invalid selection. Please try again")
         askForRepresentation()
 
+
 def askForStops():
     print("\nThe stop word options are: ")
     print("1 - Include stop words")
@@ -267,6 +296,7 @@ def askForStops():
     else:
         print("Invalid selection. Please try again")
         askForStops()
+
 
 def askForClassifier():
     print("\nThe classifiers are: ")
@@ -300,6 +330,7 @@ def askForClassifier():
     else:
         print("That was not a valid selection. Please try again.")
         askForClassifier()
+
 
 def setVectorizer(nGramType, representation, stops):
     # UNIGRAMS
