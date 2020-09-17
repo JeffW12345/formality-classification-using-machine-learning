@@ -39,7 +39,7 @@ fileName = "new_formality_data.csv"
 
 def checkFileNameCorrect():
     global fileName
-    print("The default file name is ", fileName, "/n")
+    print("The default file name is ", fileName, "\n")
     print("If this is the name of the data file, press enter")
     newFileName = input("Otherwise, enter the correct name, then press enter")
     if newFileName != "":
