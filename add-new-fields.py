@@ -78,10 +78,12 @@ def loadData():
     with open(fileName, encoding='utf-8') as inputFile:
         firstLine = inputFile.readline()
         firstLineAsList = firstLine.split(",")
+
         # The sentence field is always the final field on the right. Therefore, the sentence index is the number of
         # fields up to and including the one immediately preceding the 'sentence' field.
         sentenceIndex = len(firstLineAsList)-1
         for line in inputFile:
+
             # Searches through the line for commas, character by character. Stops when 'sentenceIndex' number of commas
             # have been encountered.
             # The document is located to the right of the comma corresponding to index 'sentenceIndex'.
@@ -94,10 +96,13 @@ def loadData():
                     dataExcludingSentence = line[:character]
                     dataExcludingSentenceThisRecordList = dataExcludingSentence.split(",")  # List containing attributes
                     dataExcludingDocumentAllRecordsList.append(dataExcludingSentenceThisRecordList)
+
                     # The rest of the current line is comprised of the document:
                     documentToAdd = line[character + 1:]
+
                     # Removes \n from the end of the sentence:
                     documentToAdd.replace('\n', '')
+
                     # Puts document into a list of Strings:
                     corpus.append(documentToAdd)
                     break
@@ -115,6 +120,7 @@ def getTopWordsInCorpus(rankDepth):
     for documents in corpus:
         wordList = documents.split(" ")
         for words in wordList:
+
             #  Removes punctuation. Code apapted from:
             #  https://stackoverflow.com/questions/875968/how-to-remove-symbols-from-a-string-with-python
             words = re.sub(r'[^\w]', '', words)
@@ -123,9 +129,11 @@ def getTopWordsInCorpus(rankDepth):
                 wordsInCorpus[words] = wordsInCorpus[words] + 1
             else:
                 wordsInCorpus[words] = 1
+
     # List of word counts and words in descending order by word count. Line below adapted from:
     # https://careerkarma.com/blog/python-sort-a-dictionary-by-value/
     wordFreqList = sorted(wordsInCorpus.items(), key=lambda x: x[1], reverse=True)
+
     # Puts the dictionary's keys and values into separate lists
     frequencyKeyList = []  # What is the word?
     frequencyValList = []  # How frequently does the word appear in the corpus?
@@ -137,6 +145,7 @@ def getTopWordsInCorpus(rankDepth):
     numInstancesThisVal = 1
     isFirstVal = True
     previousVal = 0
+
     #  Finds finds the top 'rankDepth' greatest 'word frequency within corpus' values and appends them to topValList.
     for value in frequencyValList:
         if isFirstVal:
@@ -152,9 +161,11 @@ def getTopWordsInCorpus(rankDepth):
             currentRank = currentRank + numInstancesThisVal
             previousVal = value
             numInstancesThisVal = 1
+
             # Add word to topWordsList when its ranking is <= rankDepth and it is different to the previous word.
             if currentRank <= rankDepth:
                 topValList.append(value)
+
     # Appends the top 'rankDepth' words to topWordsList.
     for i in range(len(topValList)):
         topWordsList.append(frequencyKeyList[i])
@@ -179,6 +190,7 @@ def extractGrammar(document):
     numAdjectives = numVerbs = numAdverbs = numConjunctions = numNouns = numPronouns = numModalVerbs = 0
     numPrepositions = numDeterminer = numInterjections = numProperNouns = numExistentialTheres = 0
     for entry in grammarList:
+
         # See https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html for the meanings of the
         # abbreviations below
         if entry[1] == "JJ" or entry[1] == "JJR" or entry[1] == "JJS":
@@ -358,6 +370,7 @@ def extractData():
         extractGrammar(document)  # Finds number of each of the grammar type and puts the figures into lists.
         extractPunctuation(document)  # Gets number of various punctuation types and puts figures into lists.
         listOfWords = document.split(" ")  # Splits each sentence into a list of its words.
+
         #  Creates list with punctuation removed from the words. Code for this functionality adapted from code at:
         #  https://stackoverflow.com/questions/875968/how-to-remove-symbols-from-a-string-with-python
         cleansedWordsList = []
@@ -412,6 +425,7 @@ def writeData():
         outputFile.write(allHeaders)
         print("Number of records for new file ", numberOfDocs)
         for i in range(numberOfDocs):
+
             # References to ints are surrounded by [ and ] to prevent the error msg: TypeError: can only concatenate
             # list (not "int") to list
             listOfStrings = dataExcludingDocumentAllRecordsList[i] + [numAdjectivesList[i]] + [numVerbsList[i]] + \

@@ -70,19 +70,23 @@ def loadData():
         # Copy the data file field names into a global list:
         for items in firstLineAsList:
             dataFileFieldNames.append(items)
+
         # The sentence field is always the final field on the right. Therefore, the sentence index is the number of
         # fields up to and including the one immediately preceding the 'sentence' field.
         sentenceIndex = len(firstLineAsList)-1
         for line in inputFile:
+
             # Searches through the line for commas, character by character. Stops when 'sentenceIndex' number of commas
             # have been encountered.
             # The document is located to the right of the comma corresponding to index 'sentenceIndex'.
             # Everything to the left of that comma is data relating to the document.
             numCommas = 0
             for character in range(len(line)):
+
                 #  Increments numCommas whenever a comma is encountered in the line.
                 if line[character] == ",":
                     numCommas = numCommas + 1
+
                 #  The code below is run when when the number of commas encountered equals the value of 'sentenceIndex'.
                 #  When the code below is run, it means that everything on the line to the right of the last comma
                 #  encountered is part of the sentence, and not attribute data.
@@ -96,6 +100,7 @@ def loadData():
                     documentClassificationList.append(formalityScore >= 4)
                     documentToAdd = line[character + 1:]  # The rest of the current line is comprised of the document
                     documentToAdd.replace('\n', '')  # Removes 'next line' symbol \n from the end of the document
+
                     # Puts document into a list of Strings:
                     corpus.append(documentToAdd)
                     break  # returns to the outer 'for' loop, so the next line can be processed.
@@ -105,9 +110,11 @@ def loadData():
 
 # This function performs the machine learning test and outputs a classification prediction result summary.
 def classificationResults(featureData, classificationLabels, featureDescription):
+
     #  The two lines below convert the lists passed into the function to arrays.
     X = np.array(featureData)
     y = np.array(classificationLabels)
+
     #  Splits the data into training and testing sets using 5 split k fold:
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=12345)
     skf.split(X, y)
@@ -118,6 +125,7 @@ def classificationResults(featureData, classificationLabels, featureDescription)
     for train_index, test_index in skf.split(X, y):
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
+
     # Fits the data to a model. The model is initially instantiated as SVC so that the definitions of 'classifier' in
     # the 'if' statements below it aren't out of scope of the rest of the module.
     model = SVC(gamma='scale', kernel='linear', probability=True).fit(X_train, y_train)
@@ -127,8 +135,10 @@ def classificationResults(featureData, classificationLabels, featureDescription)
         model = MultinomialNB().fit(X_train, y_train)
     if classifier == "Random Forest":
         model = RandomForestClassifier().fit(X_train, y_train)
+
     # Calls a method to generate a prediction for each sentence, and stores them in a list.
     predictions = model.predict(np.array(X_test))
+
     # Calculates true positives, true negatives, false positives and false negatives:
     truePositives = 0
     trueNegatives = 0
@@ -136,19 +146,24 @@ def classificationResults(featureData, classificationLabels, featureDescription)
     falseNegatives = 0
     numberInList = 0
     for prediction in predictions:
+
         # Is this a formal sentence which was predicted to be formal?
         if y_test[numberInList] and prediction:
             truePositives = truePositives + 1
+
         # Is this an informal sentence which was predicted to be informal?
         if not y_test[numberInList] and not prediction:
             trueNegatives = trueNegatives + 1
+
         # Is this an informal sentence which was predicted to be formal?
         if not y_test[numberInList] and prediction:
             falsePositives = falsePositives + 1
+
         # Is this a formal sentence which was predicted to be informal?
         if y_test[numberInList] and not prediction:
             falseNegatives = falseNegatives + 1
         numberInList = numberInList + 1
+
     # Performance metrics
     if (truePositives + trueNegatives + falsePositives + falseNegatives) > 0:
         accuracy = (truePositives + trueNegatives) / (truePositives + trueNegatives + falsePositives + falseNegatives)
@@ -167,10 +182,12 @@ def classificationResults(featureData, classificationLabels, featureDescription)
     else:
         fallout = 0
     balAccuracy = balanced_accuracy_score(y_test, predictions)
+
     # Area under roc curve
     y_scores = model.predict_proba(X_test)
     y_scores = y_scores[:, 1]
     rocAreaUnderCurve = roc_auc_score(y_test, y_scores)
+
     # Console output
     print("\nFeature tested:\n", featureDescription)
     print("Classifier: " + classifier, "\n")
@@ -479,6 +496,7 @@ def askForNonNgramFeatures():
         featureChoice = input("\nPlease choose the number of a feature to add: ")
         if featureChoice.isnumeric():
             featureChoice = int(featureChoice)
+
             # If a valid selection is made, adds the field name to chosenFields and removes it from fieldsToSelect.
             if 0 <= featureChoice <= len(fieldsToSelectFrom):
                 chosenFields.append(fieldsToSelectFrom[featureChoice - 1])
@@ -490,6 +508,7 @@ def askForNonNgramFeatures():
         else:
             print("You did not enter a number. Please try again.")
             askForNonNgramFeatures()
+
     #  If the user has made at least one selection already
     else:
         printAvailableFields()
@@ -500,6 +519,7 @@ def askForNonNgramFeatures():
         featureChoice = input("Please choose an additional feature or press C to select your classifier: ")
         if featureChoice.isnumeric():
             featureChoice = int(featureChoice)
+
             # If a valid selection is made, adds the field name to chosenFields and removes it from fieldsToSelect.
             if 0 <= featureChoice <= len(fieldsToSelectFrom):
                 chosenFields.append(fieldsToSelectFrom[featureChoice - 1])
@@ -508,9 +528,11 @@ def askForNonNgramFeatures():
             else:
                 print("You did not enter a valid number. Please try again.")
                 askForNonNgramFeatures()
+
         # Pressing 'C' exits the function.
         elif featureChoice == "C":
             return
+
         #  If neither 'C' nor a number entered:
         else:
             print("You did not enter a number. Please try again.")
@@ -523,13 +545,16 @@ def nonNGramFeatureDescription():
     count = 0
     for feature in chosenFields:
         count = count + 1
+
         # If the first or only feature
         if count == 1:
             featureDesc = '\'' + feature + '\''
             continue
+
         # If not final feature in list of multiple features (but not the first)
         if count != len(chosenFields):
             featureDesc = featureDesc + ", " + '\'' + feature + '\''
+
         # If final feature in list of multiple features
         if count == len(chosenFields):
             featureDesc = featureDesc + " and " + '\'' + feature + '\''

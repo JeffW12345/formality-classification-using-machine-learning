@@ -63,22 +63,27 @@ def loadData():
     with open(fileName, encoding='utf-8') as inputFile:
         firstLine = inputFile.readline()
         firstLineAsList = firstLine.split(",")
+
         # Copy the data file field names into a global list:
         for items in firstLineAsList:
             dataFileFieldNames.append(items)
+
         # The sentence field is always the final field on the right. Therefore, the sentence index is the number of
         # fields up to and including the one immediately preceding the 'sentence' field.
         sentenceIndex = len(firstLineAsList)-1
         for line in inputFile:
+
             # Searches through the line for commas, character by character. Stops when 'sentenceIndex' number of commas
             # have been encountered.
             # The document is located to the right of the comma corresponding to index 'sentenceIndex'.
             # Everything to the left of that comma is data relating to the document.
             numCommas = 0
             for character in range(len(line)):
+
                 #  Increments numCommas whenever a comma is encountered in the line.
                 if line[character] == ",":
                     numCommas = numCommas + 1
+
                 #  The code below is run when when the number of commas encountered equals the value of 'sentenceIndex'.
                 #  When the code below is run, it means that everything on the line to the right of the last comma
                 #  encountered is part of the sentence, and not attribute data.
@@ -88,10 +93,12 @@ def loadData():
                     nonDocumentData.append(dataExcludingSentenceAsList)
                     formalityScore = float(dataExcludingSentenceAsList[2])
                     formalityScoreList.append(formalityScore)
+
                     # If mechanical Turk formality score >=4 then formal status = true:
                     documentClassifications.append(formalityScore >= 4)
                     documentToAdd = line[character + 1:]  # The rest of the current line is comprised of the document
                     documentToAdd.replace('\n', '')  # Removes 'next line' symbol \n from the end of the document
+
                     # Puts document into a list of Strings:
                     corpus.append(documentToAdd)
                     break  # returns to the outer 'for' loop, so the next line can be processed.
@@ -101,6 +108,7 @@ def loadData():
 
 # This function performs the machine learning test and outputs a classification prediction result summary.
 def classificationResults(feature, results, featureDescription):
+
     #  The two lines below convert the lists passed into the function to arrays.
     X = np.array(feature)
     y = np.array(results)
@@ -115,6 +123,7 @@ def classificationResults(feature, results, featureDescription):
     for train_index, test_index in skf.split(X, y):
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
+
     # Fits the data to a model. The model is initially instantiated as SVC so that the definitions of 'classifier' in
     # the 'if' statements below it aren't out of scope of the rest of the module.
     model = SVC(gamma='scale', kernel='linear', probability=True).fit(X_train, y_train)
@@ -138,12 +147,15 @@ def classificationResults(feature, results, featureDescription):
         # Is this a formal sentence which was predicted to be formal?
         if y_test[numberInList] and prediction:
             truePositives = truePositives + 1
+
         # Is this an informal sentence which was predicted to be informal?
         if not y_test[numberInList] and not prediction:
             trueNegatives = trueNegatives + 1
+
         # Is this an informal sentence which was predicted to be formal?
         if not y_test[numberInList] and prediction:
             falsePositives = falsePositives + 1
+
         # Is this a formal sentence which was predicted to be informal?
         if y_test[numberInList] and not prediction:
             falseNegatives = falseNegatives + 1
@@ -181,6 +193,7 @@ def classificationResults(feature, results, featureDescription):
     print("FALSE POSITIVES: ", falsePositives)
     print("TRUE NEGATIVES: ", trueNegatives)
     print("FALSE NEGATIVES: ", falseNegatives)
+
     # Division by zero is illegal, so if the denominator is zero, then 'N/A' is given as the metric's value.
     if accuracy > 0:
         print("Accuracy: %3.2f" % accuracy)
@@ -228,6 +241,7 @@ def askForFeatures():
         featureChoice = input("\nPlease choose the number of a feature you wish to add and then press 'enter': ")
         if featureChoice.isnumeric():
             featureChoice = int(featureChoice)
+
             # If a valid selection is made, adds the field name to chosenFields and removes it from fieldsToSelect.
             if 0 <= featureChoice <= len(fieldsToSelectFrom):
                 chosenFields.append(fieldsToSelectFrom[featureChoice - 1])
@@ -249,6 +263,7 @@ def askForFeatures():
         featureChoice = input("\nPlease choose an additional feature or press C to select your classifier: ")
         if featureChoice.isnumeric():
             featureChoice = int(featureChoice)
+
             # If a valid selection is made, adds the field name to chosenFields and removes it from fieldsToSelect.
             if 0 <= featureChoice <= len(fieldsToSelectFrom):
                 chosenFields.append(fieldsToSelectFrom[featureChoice - 1])
@@ -303,13 +318,16 @@ def testDescription():
     count = 0
     for feature in chosenFields:
         count = count + 1
+
         # If the first or only feature
         if count == 1:
             featureDesc = '\'' + feature + '\''
             continue
+
         # If not final feature in list of multiple features (but not the first)
         if count != len(chosenFields):
             featureDesc = featureDesc + ", " + '\'' + feature + '\''
+
         # If final feature in list of multiple features
         if count == len(chosenFields):
             featureDesc = featureDesc + " and " + '\'' + feature + '\''
@@ -320,11 +338,13 @@ def setParameters():
     createFeatureFieldList()  # Puts all feature field names into list 'fieldsToSelectFrom'.
     askForFeatures()  # Asks the user to choose the features they want to test. Stores field names in 'chosenFields'.
     askForClassifier()  # Asks the user to choose a classifier. Stores the result in global variable 'classifier'.
+
     # Puts the indexes of the fields to test into a newly created list, featureIndexList.
     featureIndexList = []
     for fieldName in chosenFields:
         featureIndex = dataFileFieldNames.index(fieldName)
         featureIndexList.append(featureIndex)
+
     # Produces, for each record, a list of the feature data for that record, and stores it in 'list of lists'
     # featuresToTestDataList.
     featuresToTestDataList = []
@@ -333,6 +353,7 @@ def setParameters():
         for references in featureIndexList:
             record[references] = float(record[references])
             dataThisLine.append(record[references])
+
         # Add this sentence's feature data to featuresToTestDataList once it's been extracted to a list.
         featuresToTestDataList.append(dataThisLine)
     classificationResults(featuresToTestDataList, documentClassifications, testDescription())

@@ -72,15 +72,18 @@ def loadData():
         # fields up to and including the one immediately preceding the 'sentence' field.
         sentenceIndex = len(firstLineAsList) - 1
         for line in inputFile:
+
             # Searches through the line for commas, character by character. Stops when 'sentenceIndex' number of commas
             # have been encountered.
             # The document is located to the right of the comma corresponding to index 'sentenceIndex'.
             # Everything to the left of that comma is data relating to the document.
             numCommas = 0
             for character in range(len(line)):
+
                 #  Increments numCommas whenever a comma is encountered in the line.
                 if line[character] == ",":
                     numCommas = numCommas + 1
+
                 #  The code below is run when when the number of commas encountered equals the value of 'sentenceIndex'.
                 #  When the code below is run, it means that everything on the line to the right of the last comma
                 #  encountered is part of the sentence, and not attribute data.
@@ -143,12 +146,15 @@ def classificationResults(featureData, classificationLabels, featureDescription)
         # Is this a formal sentence which was predicted to be formal?
         if y_test[numberInList] and prediction:
             truePositives = truePositives + 1
+
         # Is this an informal sentence which was predicted to be informal?
         if not y_test[numberInList] and not prediction:
             trueNegatives = trueNegatives + 1
+
         # Is this an informal sentence which was predicted to be formal?
         if not y_test[numberInList] and prediction:
             falsePositives = falsePositives + 1
+
         # Is this a formal sentence which was predicted to be informal?
         if y_test[numberInList] and not prediction:
             falseNegatives = falseNegatives + 1
@@ -266,6 +272,7 @@ def askForRepresentation():
         else:
             print("\nInvalid selection. Please try again")
             askForRepresentation()
+
     # If non-numeric value entered:
     else:
         print("\nInvalid selection. Please try again")
@@ -290,6 +297,7 @@ def askAboutStopWords():
         else:
             print("\nInvalid selection. Please try again")
             askAboutStopWords()
+
     # If non-numeric value entered:
     else:
         print("\nInvalid selection. Please try again")
