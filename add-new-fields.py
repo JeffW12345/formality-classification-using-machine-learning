@@ -47,6 +47,7 @@ numExistentialTheresList = []
 fileName = "original_formality_dataset.csv"
 
 
+# Checks if the 'fileName' is the correct file name
 def checkFileNameCorrect():
     global fileName
     print("The default file name is ", fileName, "\n")
@@ -65,7 +66,7 @@ def checkFilePresent():
     try:
         f = open(fileName, 'rb')
     except OSError:
-        print("File not found:", fileName)
+        print("\nFile not found:", fileName)
         print("Please ensure that the data file is in the same folder as the program file.")
         print("Exiting program.")
         sys.exit()
