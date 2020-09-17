@@ -151,7 +151,7 @@ def classificationResults(feature, results, featureDescription, classifier):
     y_scores = y_scores[:, 1]
     rocAreaUnderCurve = roc_auc_score(y_test, y_scores)
     # Console output
-    print("\nFeature tested: ", featureDescription)
+    print("\nFeature tested:\n", featureDescription)
     print("Classifier: " + classifier, "\n")
     print("Total predictions: ", numberInList)
     print("TRUE POSITIVES: ", truePositives)
@@ -567,7 +567,6 @@ def setParameters():
     classificationResults(featureData, documentClassificationList, featureDescription, classifier)
 
 
-# METHOD CALLS
-
+# METHOD CALLS THAT EXECUTE WHENEVER THE PROGRAM IS RUN
 loadData()
 setParameters()

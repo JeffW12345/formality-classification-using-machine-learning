@@ -16,22 +16,20 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 
 corpus = []  # List of sentences in human-readable form (i.e. not in a bag of words representation).
-documentClassification = []  # Stored as strings - true = formal, false = informal.
+documentClassifications = []  # Stored as strings - true = formal, false = informal.
 formalityScoreList = []  # Mechanical Turk formality scores.
 nonDocumentData = []  # List of lists, each containing a sentence's attribute data.
 dataFileFieldNames = []  # The field names from the top of the data spreadsheet.
 corpus = []  # List of sentences in human-readable form (i.e. not in a bag of words representation).
-documentClassification = []  # Stored as strings - true = formal, false = informal.
+documentClassifications = []  # Stored as strings - true = formal, false = informal.
 formalityScoreList = []  # Mechanical Turk formality scores.
 nonDocumentData = []  # List of lists, each containing a sentence's attribute data.
 dataFileFieldNames = []  # The field names from the top of the data spreadsheet.
 fieldsToSelectFrom = []  # List of features that the user has not selected for the test.
 chosenFields = []  # List of features that the user has selected for the test.
-classifier = ""  # The classifier to be used.
+
 
 # This function loads the data from the file and stores it in the data structures
-
-
 def loadData():
     with open('new_formality_data.csv', encoding='utf-8') as inputFile:
         firstLine = inputFile.readline()
@@ -62,7 +60,7 @@ def loadData():
                     formalityScore = float(dataExcludingSentenceAsList[2])
                     formalityScoreList.append(formalityScore)
                     # If mechanical Turk formality score >=4 then formal status = true:
-                    documentClassification.append(formalityScore >= 4)
+                    documentClassifications.append(formalityScore >= 4)
                     documentToAdd = line[character + 1:]  # The rest of the current line is comprised of the document
                     documentToAdd.replace('\n', '')  # Removes 'next line' symbol \n from the end of the document
                     # Puts document into a list of Strings:
@@ -75,12 +73,11 @@ def loadData():
 # This function takes as its inputs the feature or features to be tested for each sentence, and the
 # classifications of the sentences. It performs a machine learning test, and prints statistics relating to the
 # test to the console.
-
-
 def classificationResults(feature, results, featureDescription, classifier):
     #  The two lines below convert the lists passed into the function to arrays.
     X = np.array(feature)
     y = np.array(results)
+
     #  Splits the data into training and testing sets using 5 split k fold:
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=12345)
     skf.split(X, y)
@@ -100,8 +97,10 @@ def classificationResults(feature, results, featureDescription, classifier):
         model = MultinomialNB().fit(X_train, y_train)
     if classifier == "Random Forest":
         model = RandomForestClassifier().fit(X_train, y_train)
+
     # Calls a method to generate a prediction for each sentence, and stores them in a list.
     predictions = model.predict(np.array(X_test))
+
     # Calculates true positives, true negatives, false positives and false negatives:
     truePositives = 0
     trueNegatives = 0
@@ -122,6 +121,7 @@ def classificationResults(feature, results, featureDescription, classifier):
         if y_test[numberInList] and not prediction:
             falseNegatives = falseNegatives + 1
         numberInList = numberInList + 1
+
     # Performance metrics
     if (truePositives + trueNegatives + falsePositives + falseNegatives) > 0:
         accuracy = (truePositives + trueNegatives) / (truePositives + trueNegatives + falsePositives + falseNegatives)
@@ -140,10 +140,12 @@ def classificationResults(feature, results, featureDescription, classifier):
     else:
         fallout = 0
     balAccuracy = balanced_accuracy_score(y_test, predictions)
-    # Area under roc curve
+
+    # Area under roc curve calculations
     y_scores = model.predict_proba(X_test)
     y_scores = y_scores[:, 1]
     rocAreaUnderCurve = roc_auc_score(y_test, y_scores)
+
     # Console output
     print("\nFeature tested: ", featureDescription)
     print("Classifier: " + classifier, "\n")
@@ -174,7 +176,6 @@ def classificationResults(feature, results, featureDescription, classifier):
 
 
 # Puts all feature field names into list 'fieldsToSelectFrom'.
-
 def createFeatureFieldList():
     count = 0
     for fieldName in dataFileFieldNames:
@@ -182,9 +183,8 @@ def createFeatureFieldList():
             fieldsToSelectFrom.append(fieldName)
             count = count + 1
 
+
 # Prints a list of fields that are available (excludes fields already selected by the user)
-
-
 def printAvailableFields():
     count = 1
     print("\nYou can add the following fields: \n")
@@ -192,10 +192,9 @@ def printAvailableFields():
         print(count, "-", fieldName)
         count = count + 1
 
-# Asks the user to choose the features they want to test. Stores field names in 'chosenFields'.
 
+# Asks the user to choose the features they want to test. Stores field names in 'chosenFields'.
 def askForFeatures():
-    featureChoice = ""
     if not chosenFields:  # If no selections yet made by the user.
         printAvailableFields()
         print("\nNo features have been selected yet")
@@ -241,10 +240,8 @@ def askForFeatures():
 
 
 # Asks the user to select a classifier.
-
-
 def askForClassifier():
-    print("\n The classifiers are: ")
+    print("\nThe classifiers are: ")
     print("1 - Support Vector Machine")
     print("2 - Logistic Regression")
     print("3 - Multinomial Bayes")
@@ -252,58 +249,71 @@ def askForClassifier():
     classifierChoice = input("\n Please choose a classifier by typing a number between 1 and 4: ")
     if classifierChoice.isnumeric():
         classifierChoice = int(classifierChoice)
+        global classifier
         if classifierChoice == 1:
             print("You have selected Support Vector Machine")
-            global classifier
             classifier = "Support Vector Machine"
+            return
         if classifierChoice == 2:
             print("You have selected Logistic Regression")
             classifier = "Logistic Regression"
+            return
         if classifierChoice == 3:
             print("You have selected Multinomial Bayes")
             classifier = "Multinomial Bayes"
+            return
         if classifierChoice == 4:
             print("You have selected Random Forest")
             classifier = "Random Forest"
+            return
         else:
             print("That was not a valid selection. Please try again.")
             askForClassifier()
     else:
         print("That was not a valid selection. Please try again.")
         askForClassifier()
-    print("\n Please choose a classifier")
+
+
+def testDescription():
+    featureDesc = ""
+    count = 0
+    for feature in chosenFields:
+        count = count + 1
+        # If the first or only feature
+        if count == 1:
+            featureDesc = '\'' + feature + '\''
+            continue
+        # If not final feature in list of multiple features (but not the first)
+        if count != len(chosenFields):
+            featureDesc = featureDesc + ", " + '\'' + feature + '\''
+        # If final feature in list of multiple features
+        if count == len(chosenFields):
+            featureDesc = featureDesc + " and " + '\'' + feature + '\''
+    return featureDesc
 
 
 def setParameters():
     createFeatureFieldList()  # Puts all feature field names into list 'fieldsToSelectFrom'.
     askForFeatures()  # Asks the user to choose the features they want to test. Stores field names in 'chosenFields'.
     askForClassifier()  # Asks the user to choose a classifier. Stores the result in global variable 'classifier'.
-    # Obtains the index positions of the features above from the list of field headers, to test and puts the indexes in
-    # a newly created list, featureIndexList.
+    # Puts the indexes of the fields to test into a newly created list, featureIndexList.
     featureIndexList = []
     for fieldName in chosenFields:
         featureIndex = dataFileFieldNames.index(fieldName)
         featureIndexList.append(featureIndex)
-    # Goes through every record in the data file, and adds the relevant data from that record to a list, which is
-    # stored in a list of lists (featuresToTestDataList).
-    featuresToTestDataList = []  # A list of instances of the variables to test
-    numberOfFields = len(featureIndexList)
+    # Produces, for each record, a list of the feature data for that record, and stores it in 'list of lists'
+    # featuresToTestDataList.
+    featuresToTestDataList = []
     for record in nonDocumentData:
         dataThisLine = []
-        count = 0
         for references in featureIndexList:
-            count = count + 1
             record[references] = float(record[references])
             dataThisLine.append(record[references])
-            if count == numberOfFields:
-                featuresToTestDataList.append(dataThisLine)
-    featureDescription = chosenFields
-    results = documentClassification
-    feature = featuresToTestDataList
-    classificationResults(feature, results, featureDescription, classifier)
+        # Add this sentence's feature data to featuresToTestDataList once it's been extracted to a list.
+        featuresToTestDataList.append(dataThisLine)
+    classificationResults(featuresToTestDataList, documentClassifications, testDescription(), classifier)
 
 
-# METHOD CALLS
-
+# METHOD CALLS THAT EXECUTE WHENEVER THE PROGRAM IS RUN
 loadData()
 setParameters()
