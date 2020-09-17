@@ -2,7 +2,6 @@
 The functions in this file first upload data from the data file, using loadData(). They then create data for new fields,
 using extractData(), and then write the original data and the new data back to the original data file, using writeData().
 
-Please make sure that original_formality_dataset.csv
 '''
 
 import nltk
@@ -161,10 +160,9 @@ def getTopWordsInCorpus(rankDepth):
         topWordsList.append(frequencyKeyList[i])
     return topWordsList
 
+
 # Returns the number of words in the document which are in the 'topWordsInCorpus' list, which is a list of the most
 # frequently occurring words in the corpus of sentences.
-
-
 def getNumTopWordsInDocument(cleansedWordsList, topWordsInCorpus):
     count = 0
     for words in cleansedWordsList:
@@ -172,10 +170,9 @@ def getNumTopWordsInDocument(cleansedWordsList, topWordsInCorpus):
             count = count + 1
     return count
 
+
 # Calculates the number of each of various grammar types (nouns, verbs, etc) in the document, and appends the relevant
 # lists.
-
-
 def extractGrammar(document):
     documentAsTokens = word_tokenize(document)
     grammarList = nltk.pos_tag(documentAsTokens)
@@ -222,10 +219,9 @@ def extractGrammar(document):
     numProperNounsList.append(numProperNouns)
     numExistentialTheresList.append(numExistentialTheres)
 
+
 # Calculates how many instances there are of various types of punctuation in each sentence, and appends
 # the relevant lists.
-
-
 def extractPunctuation(document):
     numCommas = numExclamationMarks = numFullStops = numQuestionMarks = 0
     for character in document:
@@ -242,12 +238,11 @@ def extractPunctuation(document):
     numFullStopsList.append(numFullStops)
     numQuestionMarksList.append(numQuestionMarks)
 
+
 # Calculates the average number of syllables per word in the document and appends the relevant list with
 # the figure.
 # Code for this function adapted from code at:
 # https://www.nltk.org/api/nltk.tokenize.html#nltk.tokenize.sonority_sequencing.SyllableTokenizer
-
-
 def syllableCount(cleansedWordsList):
     wordCountThisDocument = 0
     totalSyllsThisDocument = 0
@@ -263,9 +258,8 @@ def syllableCount(cleansedWordsList):
         averageNumSyllables = "N/A"
     averageNumSyllableList.append(averageNumSyllables)
 
+
 # How frequently does each word appear in the sentence on average? Appends the answer to the relevant list.
-
-
 def wordFreqThisDoc(cleansedWordsList):
     listOfFrequencies = []
     wordsProcessed = []
@@ -285,9 +279,8 @@ def wordFreqThisDoc(cleansedWordsList):
         averageWordFrequency = sum(listOfFrequencies) / len(listOfFrequencies)
     avWordFrequencyList.append(averageWordFrequency)
 
+
 # Calculates the sentence's average word length, and appends the relevant list with the result.
-
-
 def avWordLengthThisDoc(cleansedWordsList):
     characterCount = 0
     for words in cleansedWordsList:
@@ -306,8 +299,6 @@ def avWordLengthThisDoc(cleansedWordsList):
 
 
 # Returns the number of words greater than 'length' in length within the sentence.
-
-
 def numWordsGreaterThanLength(cleansedWordsList, length):
     numWords = 0
     for word in cleansedWordsList:
@@ -315,9 +306,8 @@ def numWordsGreaterThanLength(cleansedWordsList, length):
             numWords = numWords + 1
     return numWords
 
+
 # Returns the number of words less than 'length' in length within the sentence.
-
-
 def numWordsLessThanLength(cleansedWordsList, length):
     numWords = 0
     for word in cleansedWordsList:
@@ -327,8 +317,6 @@ def numWordsLessThanLength(cleansedWordsList, length):
 
 
 #  Calculates the number of capitalised words within the document, and appends the figure to the relevant list.
-
-
 def numCapitalisedWords(cleansedWordsList):
     numWords = 0
     for word in cleansedWordsList:
@@ -347,6 +335,7 @@ Produces a score between -1 and 1, where -1 is extreme negative sentiment and 1 
 It then appends the relevant list with the score. 
 '''
 
+
 def VADERScore(document):
     analyzer = SentimentIntensityAnalyzer()
     vs = analyzer.polarity_scores(document)
@@ -355,6 +344,7 @@ def VADERScore(document):
 
 # extractData() goes through each sentence in the corpus in turn using a for loop, and calls helper methods to
 # populate lists with new data for each sentence.
+
 
 def extractData():
     print("Processing data. This can take a while. Please be patient.")
@@ -388,8 +378,6 @@ def extractData():
 # writeData() writes the original data and the newly created fields/accompanying data to the original data file.
 # The new data is stored after the end of original document-related data and before the sentences themselves (the
 # sentence field is the rightmost field).
-
-
 def writeData():
     with open('original_formality_dataset.csv', encoding='utf-8') as inputFile:
         # Get column headers from existing data set and insert new field headers before the sentence field (which is the
@@ -418,6 +406,7 @@ def writeData():
         allHeaders = sep.join(existingHeadersAsList)
     inputFile.close()
     numberOfDocs = len(corpus)
+
     # Copy data to file. NB Overwrites previous file, so back it up first.
     with io.open('original_formality_dataset.csv', 'w', encoding='utf8') as outputFile:
         outputFile.write(allHeaders)
@@ -437,7 +426,7 @@ def writeData():
                             [corpus[i]]
             allDataThisLine = ','.join(map(str, listOfStrings))  # This line's data as a comma-separated string
             outputFile.write(allDataThisLine)
-    print("New data successfully written to file.")
+    print("New data successfully written to file. Program complete.")
     outputFile.close()
 
 

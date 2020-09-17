@@ -3,7 +3,7 @@ This module is purely for tests not involving n-grams.
 
 For tests using purely n-grams, please use ngram-only-tests.py.
 
-For tests involving n-grams and other features combined, using ngram-and-non-ngram-tests-combined.py.
+For tests involving n-grams and other features combined, please use ngram-and-non-ngram-tests-combined.py.
 
 '''
 import numpy as np
@@ -99,10 +99,8 @@ def loadData():
     print("\nNo of records uploaded: ", len(corpus))
 
 
-# This function takes as its inputs the feature or features to be tested for each sentence, and the
-# classifications of the sentences. It performs a machine learning test, and prints statistics relating to the
-# test to the console.
-def classificationResults(feature, results, featureDescription, classifier):
+# This function performs the machine learning test and outputs a classification prediction result summary.
+def classificationResults(feature, results, featureDescription):
     #  The two lines below convert the lists passed into the function to arrays.
     X = np.array(feature)
     y = np.array(results)
@@ -216,7 +214,7 @@ def createFeatureFieldList():
 # Prints a list of fields that are available (excludes fields already selected by the user)
 def printAvailableFields():
     count = 1
-    print("\nYou can add the following fields: \n")
+    print("\nYou can add the following features: \n")
     for fieldName in fieldsToSelectFrom:
         print(count, "-", fieldName)
         count = count + 1
@@ -244,7 +242,7 @@ def askForFeatures():
     #  If the user has made at least one selection already
     else:
         printAvailableFields()
-        print("You have added the following features: ")
+        print("\nYou have added the following features: ")
         for fields in chosenFields:
             print(fields)
         printAvailableFields()
@@ -337,7 +335,7 @@ def setParameters():
             dataThisLine.append(record[references])
         # Add this sentence's feature data to featuresToTestDataList once it's been extracted to a list.
         featuresToTestDataList.append(dataThisLine)
-    classificationResults(featuresToTestDataList, documentClassifications, testDescription(), classifier)
+    classificationResults(featuresToTestDataList, documentClassifications, testDescription())
 
 
 # METHOD CALLS THAT EXECUTE WHENEVER THE PROGRAM IS RUN

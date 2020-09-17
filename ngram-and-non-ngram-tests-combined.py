@@ -6,8 +6,6 @@ For n-gram only tests, use ngram-only-tests.py.
 
 For non n-gram only tests, use non-ngram-only-tests.py.
 
-NB The vectorizer that is required will need to be selected. See notes beginning on line 181.
-
 '''
 import numpy as np
 import sys
@@ -33,21 +31,20 @@ nonDocumentData = []  # List of lists, each containing a sentence's attribute da
 dataFileFieldNames = []  # The field names from the top of the data spreadsheet.
 fieldsToSelectFrom = []  # List of features that the user has not selected for the test.
 chosenFields = []  # List of features that the user has selected for the test.
-classifier = ""  # The classifier to be used.
 fileName = "new_formality_data.csv"
 
 
 # Checks if the 'fileName' is the correct file name
 def checkFileNameCorrect():
     global fileName
-    print("The default file name is ", fileName, "\n")
-    print("If this is the name of the data file, press enter")
-    newFileName = input("Otherwise, please provide the correct name, then press enter")
+    print("The default data file name is ", fileName, "\n")
+    print("If this is the name of the data file you are using, simply press enter")
+    newFileName = input("Otherwise, please provide the correct name, and then press enter")
     if newFileName != "":
         fileName = newFileName
-        print("\nThank you. The file name has been changed to", fileName)
+        print("\nThank you. The file name has been changed to:", fileName)
     else:
-        print("\nThank you. You have confirmed that the file name is correct:", fileName)
+        print("\nThank you. You have confirmed that the existing file name is correct:", fileName)
 
 
 # Checks if file present. Code for this module adapted from:
@@ -65,8 +62,8 @@ def checkFilePresent():
 # This function loads the data from the file and stores it in the data structures shown above.
 # It is always the first function to be run.
 def loadData():
-    checkFileNameCorrect()
-    checkFilePresent()
+    checkFileNameCorrect()  # Asks user is data file name is correct
+    checkFilePresent()  # Checks if data file is present
     with open(fileName, encoding='utf-8') as inputFile:
         firstLine = inputFile.readline()
         firstLineAsList = firstLine.split(",")
@@ -106,15 +103,11 @@ def loadData():
     print("\nNo of records uploaded: ", len(corpus))
 
 
-# This function takes as its inputs the feature or features to be tested for each sentence, and the
-# classifications of the sentences. It performs a machine learning test, and prints statistics relating to the
-# test to the console.
-
-
-def classificationResults(feature, results, featureDescription, classifier):
+# This function performs the machine learning test and outputs a classification prediction result summary.
+def classificationResults(featureData, classificationLabels, featureDescription):
     #  The two lines below convert the lists passed into the function to arrays.
-    X = np.array(feature)
-    y = np.array(results)
+    X = np.array(featureData)
+    y = np.array(classificationLabels)
     #  Splits the data into training and testing sets using 5 split k fold:
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=12345)
     skf.split(X, y)
@@ -207,6 +200,7 @@ def classificationResults(feature, results, featureDescription, classifier):
     print("Balanced accuracy: %3.2f" % balAccuracy)
 
 
+# Asks the user what type of n-gram they want to test.
 def askForType():
     print("\nThe n-gram types are: ")
     print("1 - Unigram")
@@ -242,12 +236,13 @@ def askForType():
         askForType()
 
 
+# Asks user whether n-gram will be binary, non-binary or TF-IDF representation
 def askForRepresentation():
     print("\n The representation options are: ")
     print("1 - Binary")
     print("2 - Non-Binary")
     print("3 - TF-IDF")
-    userChoice =  input("\nChoose an option by typing a number between 1 and 3 and then pressing 'enter': ")
+    userChoice = input("\nChoose an option by typing a number between 1 and 3 and then pressing 'enter': ")
     if userChoice.isnumeric():
         global representation
         userChoice = int(userChoice)
@@ -269,7 +264,8 @@ def askForRepresentation():
         askForRepresentation()
 
 
-def askForStops():
+# Asks the user if they want stop words including in their test
+def askAboutStopWords():
     print("\nThe stop word options are: ")
     print("1 - Include stop words")
     print("2 - No not include stop words")
@@ -285,13 +281,14 @@ def askForStops():
             return
         else:
             print("Invalid selection. Please try again")
-            askForStops()
+            askAboutStopWords()
     # If non-numeric value entered:
     else:
         print("\nInvalid selection. Please try again")
-        askForStops()
+        askAboutStopWords()
 
 
+# Asks user which classifier to use
 def askForClassifier():
     print("\nThe classifiers are: \n1 - Support Vector Machine\n2 - Logistic Regression\n3 - Multinomial Bayes\n"
           "4 - Random Forest")
@@ -323,6 +320,7 @@ def askForClassifier():
         askForClassifier()
 
 
+# Selects the correct vector type to create based on the user's test choices.
 def setVector(nGramType, representation, stops):
     # UNIGRAMS
 
@@ -454,9 +452,8 @@ def setVector(nGramType, representation, stops):
     if nGramType == "1, 2, 3 gram" and representation == "TF-IDF" and stops == "without stop words":
         return TfidfVectorizer(stop_words='english', ngram_range=(1, 3))
 
-# Puts all feature field names into list 'fieldsToSelectFrom'.
 
-
+# Puts all non n-gram feature field names into list 'fieldsToSelectFrom'.
 def createFeatureFieldList():
     count = 0
     for fieldName in dataFileFieldNames:
@@ -464,9 +461,8 @@ def createFeatureFieldList():
             fieldsToSelectFrom.append(fieldName)
             count = count + 1
 
+
 # Prints a list of fields that are available (excludes fields already selected by the user)
-
-
 def printAvailableFields():
     count = 1
     print("\nYou can add the following features to the test: \n")
@@ -474,9 +470,8 @@ def printAvailableFields():
         print(count, "-", fieldName)
         count = count + 1
 
+
 # Asks the user to choose the features they want to test. Stores field names in 'chosenFields'.
-
-
 def askForNonNgramFeatures():
     if not chosenFields:  # If no selections yet made by the user.
         printAvailableFields()
@@ -522,6 +517,7 @@ def askForNonNgramFeatures():
             askForNonNgramFeatures()
 
 
+# Creates a human-readable description of the selected features.
 def nonNGramFeatureDescription():
     featureDesc = ""
     count = 0
@@ -544,7 +540,7 @@ def setParameters():
     # Gets n-gram requirements from user and then puts them into a vector
     askForType()
     askForRepresentation()
-    askForStops()
+    askAboutStopWords()
 
     # Creates vector based on n-gram requirements
     corpusVector = setVector(nGramType, representation, stops)
@@ -592,7 +588,7 @@ def setParameters():
         recordNum = recordNum + 1
 
     # Call method to run the test and display the results
-    classificationResults(featureData, documentClassificationList, featureDescription, classifier)
+    classificationResults(featureData, documentClassificationList, featureDescription)
 
 
 # METHOD CALLS THAT EXECUTE WHENEVER THE PROGRAM IS RUN

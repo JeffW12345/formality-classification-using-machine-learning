@@ -4,9 +4,7 @@ This module is for tests using only n-grams (i.e. not also including any other f
 
 If other features are to be tested in addition to n-grams, use ngram-and-non-ngram-tests-combined.py.
 
-If n-grams are not being employed, use non-ngram-only-tests.py.
-
-NB The vectorizer that is required will need to be selected. See notes beginning on line 181.
+If n-grams are NOT being employed, use non-ngram-only-tests.py.
 
 '''
 import numpy as np
@@ -37,7 +35,7 @@ fileName = "new_formality_data.csv"
 # Checks if the 'fileName' is the correct file name
 def checkFileNameCorrect():
     global fileName
-    print("The default file name is ", fileName, "\n")
+    print("The default data file name is ", fileName, "\n")
     print("If this is the name of the data file, press enter")
     newFileName = input("Otherwise, please provide the correct name, then press enter")
     if newFileName != "":
@@ -61,8 +59,8 @@ def checkFilePresent():
 
 # This function loads the data from the file and stores it in global data structures.
 def loadData():
-    checkFileNameCorrect()
-    checkFilePresent()
+    checkFileNameCorrect()  # Asks user is data file name is correct
+    checkFilePresent()  # Checks if data file is present
     with open(fileName, encoding='utf-8') as inputFile:
         firstLine = inputFile.readline()
         firstLineAsList = firstLine.split(",")
@@ -105,15 +103,11 @@ def loadData():
     print("\nNo of records uploaded: ", len(corpus))
 
 
-# This function takes as its inputs the feature or features to be tested for each sentence, and the
-# classifications of the sentences. It performs a machine learning test, and prints statistics relating to the
-# test to the console.
-
-
-def classificationResults(feature, results, featureDescription, classifier):
+# This function performs the machine learning test and outputs a classification prediction result summary.
+def classificationResults(featureData, classificationLabels, featureDescription):
     #  The two lines below convert the lists passed into the function to arrays.
-    X = np.array(feature)
-    y = np.array(results)
+    X = np.array(featureData)
+    y = np.array(classificationLabels)
 
     #  Splits the data into training and testing sets using 5 split k fold:
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=12345)
@@ -214,6 +208,7 @@ def classificationResults(feature, results, featureDescription, classifier):
     print("Balanced accuracy: %3.2f" % balAccuracy)
 
 
+# Asks the user what type of n-gram they want to test.
 def askForType():
     print("\nThe n-gram types are: ")
     print("1 - Unigram")
@@ -249,12 +244,13 @@ def askForType():
         askForType()
 
 
+# Asks user whether n-gram will be binary, non-binary or TF-IDF representation
 def askForRepresentation():
     print("\n The representation options are: ")
     print("1 - Binary")
     print("2 - Non-Binary")
     print("3 - TF-IDF")
-    userChoice =  input("\nChoose an option by typing a number between 1 and 3 and then press 'enter': ")
+    userChoice = input("\nChoose an option by typing a number between 1 and 3 and then press 'enter': ")
     if userChoice.isnumeric():
         global representation
         userChoice = int(userChoice)
@@ -276,7 +272,8 @@ def askForRepresentation():
         askForRepresentation()
 
 
-def askForStops():
+# Asks the user if they want stop words including in their test
+def askAboutStopWords():
     print("\nThe stop word options are: ")
     print("1 - Include stop words")
     print("2 - No not include stop words")
@@ -292,13 +289,14 @@ def askForStops():
             return
         else:
             print("\nInvalid selection. Please try again")
-            askForStops()
+            askAboutStopWords()
     # If non-numeric value entered:
     else:
         print("\nInvalid selection. Please try again")
-        askForStops()
+        askAboutStopWords()
 
 
+# Asks the user which classifier they want
 def askForClassifier():
     print("\nThe classifiers are: \n1 - Support Vector Machine\n2 - Logistic Regression\n3 - Multinomial Bayes\n"
           "4 - Random Forest")
@@ -330,7 +328,8 @@ def askForClassifier():
         askForClassifier()
 
 
-def setVectorizer(nGramType, representation, stops):
+# Selects the correct vector type to create based on the user's test choices.
+def setVector(nGramType, representation, stops):
     # UNIGRAMS
 
     # Unigram, binary representation, stop words included.
@@ -463,18 +462,19 @@ def setVectorizer(nGramType, representation, stops):
 
 
 def setParameters():
-    askForType()
-    askForRepresentation()
-    askForStops()
-    askForClassifier()
-    corpusVector = setVectorizer(nGramType, representation, stops)
+    askForType()  # What type of n-gram will be tested?
+    askForRepresentation()  # What representation of n-gram will be tested?
+    askAboutStopWords()  # Are stop words included in the test?
+    askForClassifier()  # What classifier does the user want?
+    corpusVector = setVector(nGramType, representation, stops)  # Selects a vector based on the user's test preferences.
     fittedCorpusVector = corpusVector.fit_transform(corpus)  # Fits the n-gram configuration to the corpus of documents.
     corpusVectorAsArray = fittedCorpusVector.toarray()  # Puts the fitted data in an array.
     featureDescription = nGramType + " with " + representation + " representation and " + stops
     print("You have chosen:", featureDescription)
     print("\nYou chose the following classifier:", classifier)
     print("\nPlease be patient - the program may take a while to run.")
-    classificationResults(corpusVectorAsArray, documentClassifications, featureDescription, classifier)
+    # Calls method to run tests and display results.
+    classificationResults(corpusVectorAsArray, documentClassifications, featureDescription)
 
 
 # METHOD CALLS THAT EXECUTE WHENEVER THE PROGRAM IS RUN
