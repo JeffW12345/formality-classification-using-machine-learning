@@ -52,12 +52,12 @@ def checkFileNameCorrect():
     global fileName
     print("The default file name is ", fileName, "\n")
     print("If this is the name of the data file, press enter")
-    newFileName = input("Otherwise, enter the correct name, then press enter")
+    newFileName = input("Otherwise, please provide the correct name, then press enter")
     if newFileName != "":
         fileName = newFileName
-        print("\nThe file name has been changed to", fileName)
+        print("\nThank you. The file name has been changed to", fileName)
     else:
-        print("\nThe file name remains", fileName)
+        print("\nThank you. You have confirmed that the file name is correct:", fileName)
 
 
 # Checks if file present. Code for this module adapted from:

@@ -36,12 +36,12 @@ def checkFileNameCorrect():
     global fileName
     print("The default file name is ", fileName, "\n")
     print("If this is the name of the data file, press enter")
-    newFileName = input("Otherwise, enter the correct name, then press enter")
+    newFileName = input("Otherwise, please provide the correct name, then press enter")
     if newFileName != "":
         fileName = newFileName
-        print("\nThe file name has been changed to", fileName)
+        print("\nThank you. The file name has been changed to", fileName)
     else:
-        print("\nThe file name remains", fileName)
+        print("\nThank you. You have confirmed that the file name is correct:", fileName)
 
 
 # Checks if file present. Code for this module adapted from:
@@ -227,7 +227,7 @@ def askForFeatures():
     if not chosenFields:  # If no selections yet made by the user.
         printAvailableFields()
         print("\nNo features have been selected yet")
-        featureChoice = input("\nPlease choose the number of the feature you wish to add: ")
+        featureChoice = input("\nPlease choose the number of a feature you wish to add and then press 'enter': ")
         if featureChoice.isnumeric():
             featureChoice = int(featureChoice)
             # If a valid selection is made, adds the field name to chosenFields and removes it from fieldsToSelect.
@@ -270,12 +270,9 @@ def askForFeatures():
 
 # Asks the user to select a classifier.
 def askForClassifier():
-    print("\nThe classifiers are: ")
-    print("1 - Support Vector Machine")
-    print("2 - Logistic Regression")
-    print("3 - Multinomial Bayes")
-    print("4 - Random Forest")
-    classifierChoice = input("\nPlease choose a classifier by typing a number between 1 and 4: ")
+    print("\nThe classifiers are: \n1 - Support Vector Machine\n2 - Logistic Regression\n3 - Multinomial Bayes\n"
+          "4 - Random Forest")
+    classifierChoice = input("\nPlease choose a classifier by typing a number between 1 and 4 and then press 'enter': ")
     if classifierChoice.isnumeric():
         classifierChoice = int(classifierChoice)
         global classifier

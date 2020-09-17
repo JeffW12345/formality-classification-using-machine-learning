@@ -4,7 +4,7 @@ This module is for tests using a combination of n-grams and other features.
 
 For n-gram only tests, use ngram-only-tests.py.
 
-For non n-gram only tests, use non-ngram-tests-only.
+For non n-gram only tests, use non-ngram-only-tests.py.
 
 NB The vectorizer that is required will need to be selected. See notes beginning on line 181.
 
@@ -42,12 +42,12 @@ def checkFileNameCorrect():
     global fileName
     print("The default file name is ", fileName, "\n")
     print("If this is the name of the data file, press enter")
-    newFileName = input("Otherwise, enter the correct name, then press enter")
+    newFileName = input("Otherwise, please provide the correct name, then press enter")
     if newFileName != "":
         fileName = newFileName
-        print("\nThe file name has been changed to", fileName)
+        print("\nThank you. The file name has been changed to", fileName)
     else:
-        print("\nThe file name remains", fileName)
+        print("\nThank you. You have confirmed that the file name is correct:", fileName)
 
 
 # Checks if file present. Code for this module adapted from:
@@ -214,7 +214,7 @@ def askForType():
     print("3 - Trigram")
     print("4 - Unigram and bigram combined")
     print("5 - Unigram, bigram and trigram combined")
-    userChoice = input("\nPlease enter the number corresponding to your selection: ")
+    userChoice = input("\nChoose an option by typing a number between 1 and 5 and then pressing 'enter': ")
     if userChoice.isnumeric():
         global nGramType
         userChoice = int(userChoice)
@@ -241,12 +241,13 @@ def askForType():
         print("Invalid selection. Please try again")
         askForType()
 
+
 def askForRepresentation():
     print("\n The representation options are: ")
     print("1 - Binary")
     print("2 - Non-Binary")
     print("3 - TF-IDF")
-    userChoice = input("\nPlease enter the number corresponding to your selection: ")
+    userChoice =  input("\nChoose an option by typing a number between 1 and 3 and then pressing 'enter': ")
     if userChoice.isnumeric():
         global representation
         userChoice = int(userChoice)
@@ -267,11 +268,12 @@ def askForRepresentation():
         print("Invalid selection. Please try again")
         askForRepresentation()
 
+
 def askForStops():
     print("\nThe stop word options are: ")
     print("1 - Include stop words")
     print("2 - No not include stop words")
-    userChoice = input("\nPlease enter the number corresponding to your selection: ")
+    userChoice = input("\nChoose an option by typing 1 or 2 and then pressing 'enter': ")
     if userChoice.isnumeric():
         global stops
         userChoice = int(userChoice)
@@ -289,13 +291,11 @@ def askForStops():
         print("Invalid selection. Please try again")
         askForStops()
 
+
 def askForClassifier():
-    print("\nThe classifiers are: ")
-    print("1 - Support Vector Machine")
-    print("2 - Logistic Regression")
-    print("3 - Multinomial Bayes")
-    print("4 - Random Forest")
-    classifierChoice = input("\n Please choose a classifier by typing a number between 1 and 4: ")
+    print("\nThe classifiers are: \n1 - Support Vector Machine\n2 - Logistic Regression\n3 - Multinomial Bayes\n"
+          "4 - Random Forest")
+    classifierChoice = input("\nPlease choose a classifier by typing a number between 1 and 4 and then press 'enter': ")
     if classifierChoice.isnumeric():
         classifierChoice = int(classifierChoice)
         global classifier
