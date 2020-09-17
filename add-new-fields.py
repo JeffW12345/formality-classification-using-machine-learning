@@ -287,6 +287,7 @@ def wordFreqThisDoc(cleansedWordsList):
 
 # Calculates the sentence's average word length, and appends the relevant list with the result.
 
+
 def avWordLengthThisDoc(cleansedWordsList):
     characterCount = 0
     for words in cleansedWordsList:
@@ -439,6 +440,8 @@ def writeData():
     print("New data successfully written to file.")
     outputFile.close()
 
+
+# METHOD CALLS THAT EXECUTE WHENEVER THE PROGRAM IS RUN
 loadData()
 extractData()
 writeData()

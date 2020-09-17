@@ -176,7 +176,7 @@ def classificationResults(feature, results, featureDescription, classifier):
     rocAreaUnderCurve = roc_auc_score(y_test, y_scores)
 
     # Console output
-    print("\nFeature tested: ", featureDescription)
+    print("\nFeature(s) tested: ", featureDescription)
     print("Classifier: " + classifier, "\n")
     print("Total predictions: ", numberInList)
     print("TRUE POSITIVES: ", truePositives)
@@ -248,7 +248,7 @@ def askForFeatures():
         for fields in chosenFields:
             print(fields)
         printAvailableFields()
-        featureChoice = input("Please choose an additional feature or press C to select your classifier: ")
+        featureChoice = input("\nPlease choose an additional feature or press C to select your classifier: ")
         if featureChoice.isnumeric():
             featureChoice = int(featureChoice)
             # If a valid selection is made, adds the field name to chosenFields and removes it from fieldsToSelect.
@@ -257,14 +257,14 @@ def askForFeatures():
                 fieldsToSelectFrom.remove(fieldsToSelectFrom[featureChoice - 1])
                 askForFeatures()
             else:
-                print("You did not enter a valid number. Please try again.")
+                print("\nYou did not enter a valid number. Please try again.")
                 askForFeatures()
         # Pressing 'C' exits the function.
         elif featureChoice == "C":
             return
         #  If neither 'C' nor a number entered:
         else:
-            print("You did not enter a number. Please try again.")
+            print("\nYou did not enter a number. Please try again.")
             askForFeatures()
 
 
@@ -293,10 +293,10 @@ def askForClassifier():
             classifier = "Random Forest"
             return
         else:
-            print("That was not a valid selection. Please try again.")
+            print("\nThat was not a valid selection. Please try again.")
             askForClassifier()
     else:
-        print("That was not a valid selection. Please try again.")
+        print("\nThat was not a valid selection. Please try again.")
         askForClassifier()
 
 

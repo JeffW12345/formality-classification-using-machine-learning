@@ -234,11 +234,11 @@ def askForType():
             nGramType = "1, 2, 3 gram"
             return
         else:
-            print("Invalid selection. Please try again")
+            print("\nInvalid selection. Please try again")
             askForType()
     # If non-numeric value entered:
     else:
-        print("Invalid selection. Please try again")
+        print("\nInvalid selection. Please try again")
         askForType()
 
 
@@ -261,11 +261,11 @@ def askForRepresentation():
             representation = "TF-IDF"
             return
         else:
-            print("Invalid selection. Please try again")
+            print("\nInvalid selection. Please try again")
             askForRepresentation()
     # If non-numeric value entered:
     else:
-        print("Invalid selection. Please try again")
+        print("\nInvalid selection. Please try again")
         askForRepresentation()
 
 
@@ -288,7 +288,7 @@ def askForStops():
             askForStops()
     # If non-numeric value entered:
     else:
-        print("Invalid selection. Please try again")
+        print("\nInvalid selection. Please try again")
         askForStops()
 
 
@@ -316,10 +316,10 @@ def askForClassifier():
             classifier = "Random Forest"
             return
         else:
-            print("That was not a valid selection. Please try again.")
+            print("\nThat was not a valid selection. Please try again.")
             askForClassifier()
     else:
-        print("That was not a valid selection. Please try again.")
+        print("\nThat was not a valid selection. Please try again.")
         askForClassifier()
 
 
