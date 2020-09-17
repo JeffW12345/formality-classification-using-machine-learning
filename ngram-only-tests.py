@@ -41,9 +41,9 @@ def checkFileNameCorrect():
     newFileName = input("Otherwise, enter the correct name, then press enter")
     if newFileName != "":
         fileName = newFileName
-        print("\nThe file name has been changed to", fileName, ".")
+        print("\nThe file name has been changed to", fileName)
     else:
-        print("\nThe file name remains", fileName, ".")
+        print("\nThe file name remains", fileName)
 
 
 # Checks if file present. Code for this module adapted from:
@@ -52,7 +52,7 @@ def checkFilePresent():
     try:
         f = open(fileName, 'rb')
     except OSError:
-        print("Could not open/read file:", fileName, ".")
+        print("File not found:", fileName)
         print("Please ensure that the data file is in the same folder as the program file.")
         print("Exiting program.")
         sys.exit()
