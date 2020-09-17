@@ -246,7 +246,7 @@ def askForClassifier():
     print("2 - Logistic Regression")
     print("3 - Multinomial Bayes")
     print("4 - Random Forest")
-    classifierChoice = input("\n Please choose a classifier by typing a number between 1 and 4: ")
+    classifierChoice = input("\nPlease choose a classifier by typing a number between 1 and 4: ")
     if classifierChoice.isnumeric():
         classifierChoice = int(classifierChoice)
         global classifier
