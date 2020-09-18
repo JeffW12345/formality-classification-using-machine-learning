@@ -1,10 +1,11 @@
-For the final project of my MSc in Software Development at the University of Glasgow, I investigated using machine learning to predict sentence formality classifications.
+For the final project of my MSc in Software Development at the University of Glasgow, I investigated using machine learning to predict sentence formality 
+classifications.
 
 This repository contains:
 
 - My code (which is written in Python and uses scikit-learn), along with a requirements.txt file. 
-- The data file I used for the test (the original data file and that I added data fields to)
-- Files relating to testing the program (a dummy spreadsheet before and after new data was written to it, and the console ouput of tests performed on the 'after' version.
+- The data file I used for the test (the original data file and that I added data fields to), consisting of sentences and fields relating to the sentences.
+- Files relating to testing the program, which are stored in the Program integrity test material folder.
 - A results spreadsheet.
 
 I will also be attaching my project report once it has been completed. 
@@ -14,19 +15,24 @@ USER NOTES
 
 PROGRAM FILES:
 
-formalityTests.py is used to run formality classification machine learning tests using data uploaded from a data file.
+ngram-only-tests is used to run formality classification tests using purely n-grams as the feature. 
 
-addFields.py reads data from the data file, creates additional data fields and populates them, and then writes both the original data and the new data back to the file.
+non-ngram-only-tests is used to run formality classification tests using purely non n-gram features (such as the number of verbs in each sentence). 
 
-mcNemarTest.py is used to check if the chances of the differences between two sets of prediction results is due to randomness is less than 5%.
+ngram-and-non-ngram-tests-combined is used to run formality classification tests combining n-grams and other features. 
+
+add-fields.py reads data from the data file, creates additional data fields and populates them, and then writes both the original data and the new data 
+back to the file.
+
+mcnemar-stats.py is used to check if the chances of the differences between two sets of prediction results is due to randomness is less than 5%.
+
+checkForDuplicateSentences.py - This is located in the 'Program integrity test material' folder and can be used to check for duplicate sentences. 
 
 DATASETS:
 
 The original dataset is original_formality_dataset.csv.
 
-The modified dataset, which contains additional fields, is new_formality_data.csv.
-
-addFields.py has been set up to work with original_formality_dataset.csv. test.py has been set up to work with new_formality_data.csv. However, both programs can be made to work with any suitable CSV dataset, by changing the filename.
+The modified dataset, which contains additional fields that were added by add-fields.py, is new_formality_data.csv.
 
 PROGRAM INTEGRITY TEST FILES FOLDER:
 
@@ -35,6 +41,10 @@ These files were used to test that the programs were working as they should.
 Dummy_Data_Before.csv is populated with 20 randomly generated sentences, and the rest of the fields are populated with random numbers..
 
 Dummy_Data_After.csv contains additional data fields and data relating to the aforementioned sentences.
+
+Program integrity tests.doxc - Copies of the output of tests to ensure that the program was running as it should. Includes test print statements. 
+
+checkForDuplicateSentences.py - Described in 'PROGRAM FILES' above. 
 
 RESULTS SPREADSHEET:
 
