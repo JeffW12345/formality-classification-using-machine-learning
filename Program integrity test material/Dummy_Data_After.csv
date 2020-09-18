@@ -1,0 +1,21 @@
+﻿Sentence ID,HIT ID,Formality,Informativeness,Implicature,Length in Words,Length in Characters,F-score,I-score,Lexical Density,Number of adjectives,Number of verbs,Number of adverbs,Number of conjuctions,Number of nouns,Number of pronouns,Number of modal verbs,Number of prepositions,Number of determiners,Number of commas,Number of exclamation marks,Number of full stops,Number of question marks,Number of existential theres,Number of proper nouns,Number of capitalised words,Number of interjections,Average number of syllables per word,Average word length,Number of stop words,Number of words with > seven characters,Number of words with < 5 characters,Average word frequency,Number of words in 35 most common words in corpus,VADER sentiment score,Actual sentence
+462,227,2,376,629,466,603,385,554,971,1,2,0,0,1,1,0,0,1,0,0,1,0,0,0,1,0,1.0,3.1666666666666665,2,0,5,1.0,6,0.0,Let us do the first step.
+155,379,6,106,146,861,480,125,590,754,0,3,0,0,1,2,0,0,1,0,0,1,0,0,0,1,0,1.4285714285714286,4.142857142857143,4,1,5,1.1666666666666667,7,-0.4939,It was his notebook that was stolen.
+808,157,3,231,109,561,248,524,560,842,0,2,1,0,2,2,2,0,2,2,0,1,0,0,0,1,0,1.4545454545454546,4.181818181818182,5,0,8,1.1,11,-0.5994,"We will all die, some quickly, others will take their time."
+522,688,1,695,645,788,489,487,30,595,1,3,1,0,0,2,0,1,0,0,0,1,0,0,0,1,0,1.1428571428571428,3.0,2,0,7,1.0,7,-0.5457,I don't want you to get sick.
+636,199,7,758,884,959,528,228,954,754,0,2,1,0,2,2,0,2,1,0,0,1,0,0,0,1,0,1.2,3.1,6,0,8,1.1111111111111112,10,-0.296,No one in his class is faster than he is.
+480,36,3,138,782,506,473,368,297,820,0,3,2,0,0,4,0,2,0,1,0,1,0,0,0,2,0,1.3636363636363635,3.5454545454545454,4,1,9,1.0,11,0.0,"Whenever I try to get near her, she pushes me away."
+864,216,3,283,594,826,751,13,270,88,0,1,1,0,1,1,0,0,0,0,0,0,1,0,1,2,0,1.5,3.5,0,0,3,1.0,4,0.0258,May I come aboard?
+955,932,7,912,43,314,926,995,683,393,0,4,2,0,1,2,0,0,1,0,0,1,0,0,1,3,0,1.0,3.25,1,0,5,1.1428571428571428,8,0.0,I guess that's why I didn't ask Tom.
+401,793,2,924,772,178,217,808,732,835,2,4,1,1,1,1,0,0,0,0,0,1,0,0,1,1,0,1.3,4.0,5,0,7,1.0,10,0.0,Helen does not eat enough and she is getting thin.
+779,26,7,292,73,124,481,736,448,255,0,0,1,0,1,0,0,1,1,0,0,1,0,0,0,1,0,1.5,4.25,2,0,3,1.0,4,0.0,That book's over here.
+30,382,4,18,717,603,982,15,907,17,0,1,0,0,2,0,0,1,1,0,0,1,0,0,0,1,0,1.6,5.4,1,1,3,1.0,5,-0.2263,The train disappeared from view.
+497,737,6,171,767,400,902,951,836,291,1,1,0,0,2,0,0,0,1,0,0,1,0,0,1,1,0,1.6,3.6,2,1,4,1.0,5,0.0,Tom is a religious nut.
+685,776,1,501,602,62,551,37,668,286,1,2,1,0,1,3,0,3,0,0,0,1,0,0,0,1,0,1.2727272727272727,3.090909090909091,8,1,9,1.1,11,0.3818,It is as clear to me as if it were yesterday.
+214,421,2,127,522,181,878,562,812,457,0,2,0,0,1,1,0,2,1,0,0,1,0,0,0,1,0,1.1428571428571428,2.857142857142857,4,0,6,1.0,7,-0.296,He has no room to study in.
+970,589,3,775,885,657,662,377,215,710,0,1,1,0,2,2,1,1,1,0,0,1,0,0,0,1,0,1.75,3.625,4,0,7,1.0,8,0.0,It'll only take a minute of your time.
+179,225,4,668,916,893,674,514,936,150,0,1,0,0,3,1,0,2,0,0,0,1,0,0,0,1,0,1.4285714285714286,4.857142857142857,2,1,3,1.0,7,0.0,My father tries to abstain from drinking.
+483,571,6,59,879,467,7,861,479,701,0,2,2,1,2,2,1,0,0,0,2,0,0,0,1,3,0,1.3333333333333333,3.7777777777777777,4,0,6,1.0,9,-0.4559,Halt! Stay right where you are or I'll shoot!
+492,210,7,406,364,577,744,364,201,586,0,2,0,0,2,0,0,1,2,0,0,1,0,0,1,2,0,1.2857142857142858,3.2857142857142856,3,0,5,1.0,7,0.0,This is a watch made in Japan.
+710,665,1,695,291,638,274,308,917,247,1,1,0,0,1,2,0,1,0,0,0,1,0,0,0,1,0,2.0,5.2,2,1,3,1.0,5,-0.6486,I'm annoyed at your selfishness.
+976,936,1,645,277,811,928,708,435,430,0,1,1,0,0,2,0,0,0,0,0,1,0,0,0,1,0,1.5,3.25,3,0,3,1.0,4,0.0,Maybe it was you.
