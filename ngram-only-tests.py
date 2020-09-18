@@ -6,6 +6,8 @@ If other features are to be tested in addition to n-grams, use ngram-and-non-ngr
 
 If n-grams are NOT being employed, use non-ngram-only-tests.py.
 
+The code relating to scikit-learn was adapted from code on the scikit-learn website: https://scikit-learn.org/
+
 '''
 import numpy as np
 import sys

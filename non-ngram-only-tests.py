@@ -5,6 +5,8 @@ For tests using purely n-grams, please use ngram-only-tests.py.
 
 For tests involving n-grams and other features combined, please use ngram-and-non-ngram-tests-combined.py.
 
+The code relating to scikit-learn was adapted from code on the scikit-learn website: https://scikit-learn.org/
+
 '''
 import numpy as np
 from sklearn.linear_model import LogisticRegression
@@ -260,7 +262,8 @@ def askForFeatures():
         for fields in chosenFields:
             print(fields)
         printAvailableFields()
-        featureChoice = input("\nPlease choose an additional feature or press C to select your classifier: ")
+        featureChoice = input("\nPlease choose an additional feature and press 'enter'\nor press C then 'enter' to "
+                              "select your classifier: ")
         if featureChoice.isnumeric():
             featureChoice = int(featureChoice)
 

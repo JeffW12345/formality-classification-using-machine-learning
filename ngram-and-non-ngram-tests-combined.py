@@ -6,6 +6,8 @@ For n-gram only tests, use ngram-only-tests.py.
 
 For non n-gram only tests, use non-ngram-only-tests.py.
 
+The code relating to scikit-learn was adapted from code on the scikit-learn website: https://scikit-learn.org/
+
 '''
 import numpy as np
 import sys
@@ -516,7 +518,8 @@ def askForNonNgramFeatures():
         for fields in chosenFields:
             print(fields)
         printAvailableFields()
-        featureChoice = input("Please choose an additional feature or press C to select your classifier: ")
+        featureChoice = input("\nPlease choose an additional feature and press 'enter'\nor press C then 'enter' to "
+                              "select your classifier: ")
         if featureChoice.isnumeric():
             featureChoice = int(featureChoice)
 
