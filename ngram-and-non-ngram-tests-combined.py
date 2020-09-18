@@ -287,7 +287,7 @@ def askForRepresentation():
 def askAboutStopWords():
     print("\nThe stop word options are: ")
     print("1 - Include stop words")
-    print("2 - No not include stop words")
+    print("2 - No, do not include stop words")
     userChoice = input("\nChoose an option by typing 1 or 2 and then pressing 'enter': ")
     if userChoice.isnumeric():
         global stops
@@ -501,6 +501,7 @@ def askForNonNgramFeatures():
 
             # If a valid selection is made, adds the field name to chosenFields and removes it from fieldsToSelect.
             if 0 <= featureChoice <= len(fieldsToSelectFrom):
+                print("\nYou have just selected: " + fieldsToSelectFrom[featureChoice - 1])
                 chosenFields.append(fieldsToSelectFrom[featureChoice - 1])
                 fieldsToSelectFrom.remove(fieldsToSelectFrom[featureChoice - 1])
                 askForNonNgramFeatures()
@@ -514,10 +515,9 @@ def askForNonNgramFeatures():
     #  If the user has made at least one selection already
     else:
         printAvailableFields()
-        print("You have added the following features: ")
+        print("You have previously added the following features: ")
         for fields in chosenFields:
             print(fields)
-        printAvailableFields()
         featureChoice = input("\nPlease choose an additional feature and press 'enter'\nor press C then 'enter' to "
                               "select your classifier: ")
         if featureChoice.isnumeric():
@@ -525,6 +525,7 @@ def askForNonNgramFeatures():
 
             # If a valid selection is made, adds the field name to chosenFields and removes it from fieldsToSelect.
             if 0 <= featureChoice <= len(fieldsToSelectFrom):
+                print("\nYou have just selected: " + fieldsToSelectFrom[featureChoice - 1])
                 chosenFields.append(fieldsToSelectFrom[featureChoice - 1])
                 fieldsToSelectFrom.remove(fieldsToSelectFrom[featureChoice - 1])
                 askForNonNgramFeatures()
@@ -604,8 +605,8 @@ def setParameters():
     nonNGramFeatures = nonNGramFeatureDescription()
     featureDescription = nGramType + " with " + representation + " representation and " + stops + \
                          " with the following non n-gram features:\n" + nonNGramFeatures
-    print("\nThis is a summary of the test to be carried out:\n" + featureDescription)
-    print("\nYour classifier is: ", classifier)
+    print("\nTEST SUMMARY\n" + "------------\n" + featureDescription)
+    print("Your classifier is: ", classifier)
     print("\nThe test may take a while. Please be patient.")
 
     # Appends each line's non-ngram feature data to the end of the n-gram vector, and store in feature[].

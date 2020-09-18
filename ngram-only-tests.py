@@ -39,7 +39,7 @@ def checkFileNameCorrect():
     global fileName
     print("The default data file name is ", fileName, "\n")
     print("If this is the name of the data file, press enter")
-    newFileName = input("Otherwise, please provide the correct name, then press enter")
+    newFileName = input("Otherwise, please provide the correct name, then press enter: ")
     if newFileName != "":
         fileName = newFileName
         print("\nThank you. The file name has been changed to", fileName)
@@ -54,7 +54,7 @@ def checkFilePresent():
         f = open(fileName, 'rb')
     except OSError:
         print("\nFile not found:", fileName)
-        print("Please ensure that the data file is in the same folder as the program file.")
+        print("Please ensure that the data file is in the same folder as the program file and try again.")
         print("Exiting program.")
         sys.exit()
 
@@ -187,6 +187,7 @@ def classificationResults(featureData, classificationLabels, featureDescription)
     rocAreaUnderCurve = roc_auc_score(y_test, y_scores)
 
     # Console output
+    print("\nRESULTS SUMMARY\n" + "---------------\n" + featureDescription)
     print("\nFeature tested: ", featureDescription)
     print("Classifier: " + classifier, "\n")
     print("Total predictions: ", numberInList)
@@ -285,7 +286,7 @@ def askForRepresentation():
 def askAboutStopWords():
     print("\nThe stop word options are: ")
     print("1 - Include stop words")
-    print("2 - No not include stop words")
+    print("2 - No, do not include stop words")
     userChoice = input("\nChoose an option by typing either 1 or 2 and then press 'enter': ")
     if userChoice.isnumeric():
         global stops
@@ -310,7 +311,7 @@ def askAboutStopWords():
 def askForClassifier():
     print("\nThe classifiers are: \n1 - Support Vector Machine\n2 - Logistic Regression\n3 - Multinomial Bayes\n"
           "4 - Random Forest")
-    classifierChoice = input("\nPlease choose a classifier by typing a number between 1 and 4 and then press 'enter':")
+    classifierChoice = input("\nPlease choose a classifier by typing a number between 1 and 4 and then press 'enter': ")
     if classifierChoice.isnumeric():
         classifierChoice = int(classifierChoice)
         global classifier
@@ -480,7 +481,7 @@ def setParameters():
     fittedCorpusVector = corpusVector.fit_transform(corpus)  # Fits the n-gram configuration to the corpus of documents.
     corpusVectorAsArray = fittedCorpusVector.toarray()  # Puts the fitted data in an array.
     featureDescription = nGramType + " with " + representation + " representation and " + stops
-    print("You have chosen:", featureDescription)
+    print("\nTEST SUMMARY\n" + "------------\n" + featureDescription)
     print("\nYou chose the following classifier:", classifier)
     print("\nPlease be patient - the program may take a while to run.")
     # Calls method to run tests and display results.

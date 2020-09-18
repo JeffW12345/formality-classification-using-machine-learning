@@ -43,7 +43,7 @@ def checkFileNameCorrect():
         fileName = newFileName
         print("\nThank you. The file name has been changed to", fileName)
     else:
-        print("\nThank you. You have confirmed that the file name is correct:", fileName)
+        print("\nThank you. You have confirmed that the data file name is correct:", fileName)
 
 
 # Checks if file present. Code for this module adapted from:
@@ -188,7 +188,8 @@ def classificationResults(feature, results, featureDescription):
     rocAreaUnderCurve = roc_auc_score(y_test, y_scores)
 
     # Console output
-    print("\nFeature(s) tested: ", featureDescription)
+    print("\nRESULTS SUMMARY\n" + "---------------\n")
+    print("Feature(s) tested: ", featureDescription)
     print("Classifier: " + classifier, "\n")
     print("Total predictions: ", numberInList)
     print("TRUE POSITIVES: ", truePositives)
@@ -246,6 +247,7 @@ def askForFeatures():
 
             # If a valid selection is made, adds the field name to chosenFields and removes it from fieldsToSelect.
             if 0 <= featureChoice <= len(fieldsToSelectFrom):
+                print("\nYou have just selected: " + fieldsToSelectFrom[featureChoice - 1])
                 chosenFields.append(fieldsToSelectFrom[featureChoice - 1])
                 fieldsToSelectFrom.remove(fieldsToSelectFrom[featureChoice - 1])
                 askForFeatures()
@@ -258,10 +260,9 @@ def askForFeatures():
     #  If the user has made at least one selection already
     else:
         printAvailableFields()
-        print("\nYou have added the following features: ")
-        for fields in chosenFields:
-            print(fields)
-        printAvailableFields()
+        print("\nYou have previously added the following features: ")
+        for field in chosenFields:
+            print(field)
         featureChoice = input("\nPlease choose an additional feature and press 'enter'\nor press C then 'enter' to "
                               "select your classifier: ")
         if featureChoice.isnumeric():
@@ -269,6 +270,7 @@ def askForFeatures():
 
             # If a valid selection is made, adds the field name to chosenFields and removes it from fieldsToSelect.
             if 0 <= featureChoice <= len(fieldsToSelectFrom):
+                print("\nYou have just selected: " + fieldsToSelectFrom[featureChoice - 1])
                 chosenFields.append(fieldsToSelectFrom[featureChoice - 1])
                 fieldsToSelectFrom.remove(fieldsToSelectFrom[featureChoice - 1])
                 askForFeatures()
