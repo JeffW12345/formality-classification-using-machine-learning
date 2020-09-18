@@ -257,7 +257,7 @@ def askForType():
 
 # Asks user whether n-gram will be binary, non-binary or TF-IDF representation
 def askForRepresentation():
-    print("\n The representation options are: ")
+    print("\nThe representation options are: ")
     print("1 - Binary")
     print("2 - Non-Binary")
     print("3 - TF-IDF")
