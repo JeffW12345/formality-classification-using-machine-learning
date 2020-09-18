@@ -52,4 +52,4 @@ The spreadsheet is organised into sheets, each of which relates to a different c
 
 SAMPLE CONSOLE OUTPUT:
 
-Sample_Console_Output.docx shows console output relating to the three modules that run machine learning programs.
+Sample_Console_Output.docx displays sample console output relating to the three modules responsible for the machine learning tests.
