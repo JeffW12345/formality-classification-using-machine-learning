@@ -9,15 +9,15 @@ Code below adapted from https://machinelearningmastery.com/mcnemars-test-for-mac
 
 from statsmodels.stats.contingency_tables import mcnemar
 
-TP1 = input("For the first set of data, how many true positives are there?")
-FP1 = input("For the first set of data, how many false positives are there?")
-TN1 = input("For the first set of data, how many true negatives are there?")
-FN1 = input("For the first set of data, how many false negatives are there?")
+TP1 = input("For the first set of data, how many true positives are there? ")
+FP1 = input("For the first set of data, how many false positives are there? ")
+TN1 = input("For the first set of data, how many true negatives are there? ")
+FN1 = input("For the first set of data, how many false negatives are there? ")
 
-TP2 = input("For the second set of data, how many true positives are there?")
-FP2 = input("For the second set of data, how many false positives are there?")
-TN2 = input("For the second set of data, how many true negatives are there?")
-FN2 = input("For the second set of data, how many false negatives are there?")
+TP2 = input("For the second set of data, how many true positives are there? ")
+FP2 = input("For the second set of data, how many false positives are there? ")
+TN2 = input("For the second set of data, how many true negatives are there? ")
+FN2 = input("For the second set of data, how many false negatives are there? ")
 
 correct1 = int(TP1) + int(TN1)
 incorrect1 = int(FP1) + int(FN1)
@@ -42,8 +42,8 @@ print('statistic=%.3f, p-value=%.3f' % (result.statistic, result.pvalue))
 # interpret the p-value
 alpha = 0.05
 if result.pvalue > alpha:
-    print('\nMcNemar statistic=%.3f, p-value=%.3f.\nThe results ARE NOT significantly different, based on a p value of '
+    print('\nThe results ARE NOT significantly different, based on a p value of '
           '5 percent.')
 else:
-    print('\nMcNemar statistic=%.3f, p-value=%.3f. \nThe results ARE significantly different, based on a p value of '
+    print('\nThe results ARE significantly different, based on a p value of '
           '5 percent.')

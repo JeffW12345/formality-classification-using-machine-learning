@@ -49,7 +49,7 @@ fileName = "original_formality_dataset.csv"
 # Checks if the 'fileName' is the correct file name
 def checkFileNameCorrect():
     global fileName
-    print("The default file name is ", fileName, "\n")
+    print("The default file name is", fileName, "\n")
     print("If this is the name of the data file, press enter")
     newFileName = input("Otherwise, please provide the correct name (including the file extension), then press enter ")
     if newFileName != "":
@@ -66,7 +66,7 @@ def checkFilePresent():
         f = open(fileName, 'rb')
     except OSError:
         print("\nFile not found:", fileName)
-        print("Please ensure that the data file is in the same folder as the program file.")
+        print("Please ensure that the data file is in the same folder as the program file and try again.")
         print("Exiting program.")
         sys.exit()
 

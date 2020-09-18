@@ -38,7 +38,7 @@ def checkFileNameCorrect():
     global fileName
     print("The default file name is ", fileName, "\n")
     print("If this is the name of the data file, press enter")
-    newFileName = input("Otherwise, please provide the correct name, then press enter")
+    newFileName = input("Otherwise, please provide the correct name, then press enter: ")
     if newFileName != "":
         fileName = newFileName
         print("\nThank you. The file name has been changed to", fileName)
