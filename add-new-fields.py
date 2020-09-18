@@ -51,7 +51,7 @@ def checkFileNameCorrect():
     global fileName
     print("The default file name is ", fileName, "\n")
     print("If this is the name of the data file, press enter")
-    newFileName = input("Otherwise, please provide the correct name, then press enter")
+    newFileName = input("Otherwise, please provide the correct name (including the file extension), then press enter ")
     if newFileName != "":
         fileName = newFileName
         print("\nThank you. The file name has been changed to", fileName)
@@ -392,7 +392,7 @@ def extractData():
 # The new data is stored after the end of original document-related data and before the sentences themselves (the
 # sentence field is the rightmost field).
 def writeData():
-    with open('original_formality_dataset.csv', encoding='utf-8') as inputFile:
+    with open(fileName, encoding='utf-8') as inputFile:
         # Get column headers from existing data set and insert new field headers before the sentence field (which is the
         # furthest field on the right).
         existingHeaders = inputFile.readline()
@@ -421,7 +421,7 @@ def writeData():
     numberOfDocs = len(corpus)
 
     # Copy data to file. NB Overwrites previous file, so back it up first.
-    with io.open('original_formality_dataset.csv', 'w', encoding='utf8') as outputFile:
+    with io.open(fileName, 'w', encoding='utf8') as outputFile:
         outputFile.write(allHeaders)
         print("Number of records for new file ", numberOfDocs)
         for i in range(numberOfDocs):
