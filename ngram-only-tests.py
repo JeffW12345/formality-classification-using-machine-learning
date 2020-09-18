@@ -187,7 +187,7 @@ def classificationResults(featureData, classificationLabels, featureDescription)
     rocAreaUnderCurve = roc_auc_score(y_test, y_scores)
 
     # Console output
-    print("\nRESULTS SUMMARY\n" + "---------------\n" + featureDescription)
+    print("\nRESULTS SUMMARY\n" + "---------------")
     print("\nFeature tested: ", featureDescription)
     print("Classifier: " + classifier, "\n")
     print("Total predictions: ", numberInList)
