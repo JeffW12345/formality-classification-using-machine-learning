@@ -8,8 +8,6 @@ This repository contains:
 - Files relating to testing the program, which are stored in the Program integrity test material folder.
 - A results spreadsheet.
 
-I will also be attaching my project report once it has been completed. 
-
 USER NOTES
 ----------
 
@@ -51,3 +49,7 @@ RESULTS SPREADSHEET:
 Formality_Classification_Results is a results spreadsheet containing the results of formality classification prediction tests.
 
 The spreadsheet is organised into sheets, each of which relates to a different category of test.
+
+SAMPLE CONSOLE OUTPUT:
+
+Sample_Console_Output.docx shows console output relating to the three modules that run machine learning programs.
