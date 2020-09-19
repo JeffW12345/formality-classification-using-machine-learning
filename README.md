@@ -7,6 +7,7 @@ This repository contains:
 - The data file I used for the test (the original data file and that I added data fields to), consisting of sentences and fields relating to the sentences.
 - Files relating to testing the program, which are stored in the Program integrity test material folder.
 - A results spreadsheet.
+- Sample console output of the machine learning tests. 
 
 USER NOTES
 ----------
