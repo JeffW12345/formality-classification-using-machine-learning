@@ -260,7 +260,7 @@ def askForFeatures():
     #  If the user has made at least one selection already
     else:
         printAvailableFields()
-        print("\nYou have previously added the following features: ")
+        print("\nYou have previously selected the following features: ")
         for field in chosenFields:
             print(field)
         featureChoice = input("\nPlease choose an additional feature and press 'enter'\nor press C then 'enter' to "
