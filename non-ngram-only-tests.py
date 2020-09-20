@@ -225,6 +225,7 @@ def createFeatureFieldList():
         if fieldName not in nonFeatureFields:
             fieldsToSelectFrom.append(fieldName)
 
+
 # Prints a list of fields that are available (excludes fields already selected by the user)
 def printAvailableFields():
     count = 1
@@ -236,6 +237,9 @@ def printAvailableFields():
 
 # Asks the user to choose the features they want to test. Stores field names in 'chosenFields'.
 def askForFeatures():
+    if not fieldsToSelectFrom:  # If all the available features have already been selected by the user
+        print("\nYou have selected all the available features. You will now be asked to choose a classifier.")
+        return
     if not chosenFields:  # If no selections yet made by the user.
         printAvailableFields()
         print("\nNo features have been selected yet")

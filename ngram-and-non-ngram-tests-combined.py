@@ -491,6 +491,8 @@ def printAvailableFields():
 
 # Asks the user to choose the features they want to test. Stores field names in 'chosenFields'.
 def askForNonNgramFeatures():
+    if not fieldsToSelectFrom:  # If all the available features have already been selected by the user
+        print("\nYou have selected all the available features. You will now be asked to choose a classifier.")
     if not chosenFields:  # If no selections yet made by the user.
         printAvailableFields()
         print("\nNo features have been selected yet")
