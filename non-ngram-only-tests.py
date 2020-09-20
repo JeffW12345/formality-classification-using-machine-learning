@@ -261,10 +261,10 @@ def askForFeatures():
             askForFeatures()
     #  If the user has made at least one selection already
     else:
-        printAvailableFields()
         print("\nYou have previously selected the following features: ")
         for field in chosenFields:
             print(field)
+        printAvailableFields()
         featureChoice = input("\nPlease choose an additional feature and press 'enter'\nor press C then 'enter' to "
                               "select your classifier: ")
         if featureChoice.isnumeric():
