@@ -138,7 +138,7 @@ def classificationResults(featureData, classificationLabels, featureDescription)
     if classifier == "Random Forest":
         model = RandomForestClassifier().fit(X_train, y_train)
 
-    # Calls a method to generate a prediction for each sentence, and stores them in a list.
+    # Generates a prediction for each sentence, and stores them in a list called 'predictions'.
     predictions = model.predict(np.array(X_test))
 
     # Calculates true positives, true negatives, false positives and false negatives:

@@ -135,7 +135,7 @@ def classificationResults(featureData, classificationLabels, featureDescription)
     if classifier == "Random Forest":
         model = RandomForestClassifier().fit(X_train, y_train)
 
-    # Calls a method to generate a prediction for each sentence, and stores them in a list.
+    # Generates a prediction for each sentence, and stores them in a list called 'predictions'.
     predictions = model.predict(np.array(X_test))
 
     # Calculates true positives, true negatives, false positives and false negatives:
@@ -484,10 +484,11 @@ def setParameters():
     print("\nTEST SUMMARY\n" + "------------\n" + featureDescription)
     print("\nYou chose the following classifier:", classifier)
     print("\nPlease be patient - the program may take a while to run.")
-    # Calls method to run tests and display results.
+
+    # Runs tests and displays results
     classificationResults(corpusVectorAsArray, documentClassifications, featureDescription)
 
 
-# METHOD CALLS THAT EXECUTE WHENEVER THE PROGRAM IS RUN
+# FUNCTION CALLS THAT EXECUTE WHENEVER THE PROGRAM IS RUN
 loadData()
 setParameters()
