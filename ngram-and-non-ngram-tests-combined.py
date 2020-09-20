@@ -515,7 +515,7 @@ def askForNonNgramFeatures():
 
     #  If the user has made at least one selection already
     else:
-        print("\nYou have previously selected the following features: ")
+        print("\nSo far, you have selected the following features: ")
         for fields in chosenFields:
             print(fields)
         printAvailableFields()
