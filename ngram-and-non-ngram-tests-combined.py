@@ -472,13 +472,12 @@ def setVector(nGramType, representation, stops):
         return TfidfVectorizer(stop_words='english', ngram_range=(1, 3))
 
 
-# Puts all non n-gram feature field names into list 'fieldsToSelectFrom'.
+# Puts all non n-gram feature field names into list 'fieldsToSelectFrom', except those that are not feature fields.
 def createFeatureFieldList():
-    count = 0
+    nonFeatureFields = ['HIT ID', 'Sentence ID', 'Formality', 'Actual sentence\n']
     for fieldName in dataFileFieldNames:
-        if count < (len(dataFileFieldNames)-1):
+        if fieldName not in nonFeatureFields:
             fieldsToSelectFrom.append(fieldName)
-            count = count + 1
 
 
 # Prints a list of fields that are available (excludes fields already selected by the user)
@@ -576,6 +575,7 @@ def setParameters():
     fittedCorpusVector = corpusVector.fit_transform(corpus)
     corpusVectorAsArray = fittedCorpusVector.toarray()
 
+
     # Gets non n-gram features from user
     createFeatureFieldList()  # Puts all feature field names into list 'fieldsToSelectFrom'.
     askForNonNgramFeatures()  # Asks the user to choose the features they want to test. Stores in 'chosenFields'.
@@ -615,11 +615,10 @@ def setParameters():
     for documentBagsOfWords in corpusVectorAsArray:
         featureData.append(np.hstack((documentBagsOfWords, featuresToTestDataList[recordNum])))
         recordNum = recordNum + 1
-
-    # Call method to run the test and display the results
+    # Call function to run the test and display the results
     classificationResults(featureData, documentClassificationList, featureDescription)
 
 
-# METHOD CALLS THAT EXECUTE WHENEVER THE PROGRAM IS RUN
+# FUNCTION CALLS THAT EXECUTE WHENEVER THE PROGRAM IS RUN
 loadData()
 setParameters()

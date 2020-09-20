@@ -218,14 +218,12 @@ def classificationResults(feature, results, featureDescription):
     print("Balanced accuracy: %3.2f" % balAccuracy)
 
 
-# Puts all feature field names into list 'fieldsToSelectFrom'.
+# Puts all non n-gram feature field names into list 'fieldsToSelectFrom', except those that are not feature fields.
 def createFeatureFieldList():
-    count = 0
+    nonFeatureFields = ['HIT ID', 'Sentence ID', 'Formality', 'Actual sentence\n']
     for fieldName in dataFileFieldNames:
-        if count < (len(dataFileFieldNames)-1):
+        if fieldName not in nonFeatureFields:
             fieldsToSelectFrom.append(fieldName)
-            count = count + 1
-
 
 # Prints a list of fields that are available (excludes fields already selected by the user)
 def printAvailableFields():
