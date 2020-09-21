@@ -9,8 +9,6 @@ This repository contains:
 - Files relating to testing the program, which are stored in the Program integrity test material folder.
 - A results spreadsheet.
 
-A project report will be added when it has been completed. 
-
 USER NOTES
 ----------
 
