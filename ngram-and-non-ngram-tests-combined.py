@@ -611,7 +611,7 @@ def setParameters():
     print("Your classifier is: ", classifier)
     print("\nThe test may take a while. Please be patient.")
 
-    # Appends each line's non-ngram feature data to the end of the n-gram vector, and store in feature[].
+    # Appends each line's non-ngram feature data to the end of the n-gram vector, and store in featureData[].
     featureData = []
     recordNum = 0
     for documentBagsOfWords in corpusVectorAsArray:
