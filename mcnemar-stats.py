@@ -2,7 +2,7 @@
 
 Calculates the McNemar statistic and states the p-value of the result.
 
-Some of the code below is adapted from httruePositivess://machinelearningmastery.com/mcnemars-test-for-machine-learning/.
+Some of the code below is adapted from code at https://machinelearningmastery.com/mcnemars-test-for-machine-learning/.
 
 '''
 
