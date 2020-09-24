@@ -1,6 +1,6 @@
 '''
 
-Calculates the McNemar statistic and states the p-value of the result.
+Calculates the McNemar statistic and the corresponding p value from two sets of machine learning test results.
 
 Some of the code below is adapted from code at https://machinelearningmastery.com/mcnemars-test-for-machine-learning/.
 
@@ -8,80 +8,81 @@ Some of the code below is adapted from code at https://machinelearningmastery.co
 
 from statsmodels.stats.contingency_tables import mcnemar
 
-# The function below asks the user for data relating to machine learning tests and assigns it to the correct variable.
-# Asks the user to try again if a non-numeric value is entered.
-def askForData(position, description):
-    # In variables below, truePositives 1 = number of true positives for the first test, true Positives2 = number of true
-    # positives for the second test, etc.
-    global truePositives1, falsePositives1, trueNegatives1, falseNegatives1, truePositives2, falsePositives2, \
-        trueNegatives2, falseNegatives2
 
-    toAsk = "For the " + position + " set of data, how many " + description + " are there? "
+# The function below asks the user for data relating to the two sets of machine learning test results and assigns the
+# data to the correct variable.
+# 'nameOfSetOfResults' refers whether the data set is for the first or second set of data.
+# 'metricName' refers to true positive, true negative, etc.
+#  The function asks the user to try again if a non-numeric value is entered.
+def askForData(nameOfSetOfResults, metricName):
+    global truePositivesFirstSet, falsePositivesFirstSet, trueNegativesFirstSet, falseNegativesFirstSet, \
+        truePositivesSecondSet, falsePositivesSecondSet, trueNegativesSecondSet, falseNegativesSecondSet
+    toAsk = "For the " + nameOfSetOfResults + " set of data, how many " + metricName + " are there? "
     userInput = input(toAsk)
 
     # True positives, first data set
-    if position == "first" and description == "true positives" and userInput.isnumeric():
-        truePositives1 = int(userInput)
+    if nameOfSetOfResults == "first" and metricName == "true positives" and userInput.isnumeric():
+        truePositivesFirstSet = int(userInput)
         return
-    if position == "first" and description == "true positives" and not userInput.isnumeric():
+    if nameOfSetOfResults == "first" and metricName == "true positives" and not userInput.isnumeric():
         print("You need to enter an integer. Please try again.")
-        askForData(position, description)
+        askForData(nameOfSetOfResults, metricName)
 
     # False positives, first data set
-    if position == "first" and description == "false positives" and userInput.isnumeric():
-        falsePositives1 = int(userInput)
+    if nameOfSetOfResults == "first" and metricName == "false positives" and userInput.isnumeric():
+        falsePositivesFirstSet = int(userInput)
         return
-    if position == "first" and description == "false positives" and not userInput.isnumeric():
+    if nameOfSetOfResults == "first" and metricName == "false positives" and not userInput.isnumeric():
         print("You need to enter an integer. Please try again.")
-        askForData(position, description)
+        askForData(nameOfSetOfResults, metricName)
 
     # True negatives, first data set
-    if position == "first" and description == "true negatives" and userInput.isnumeric():
-        trueNegatives1 = int(userInput)
+    if nameOfSetOfResults == "first" and metricName == "true negatives" and userInput.isnumeric():
+        trueNegativesFirstSet = int(userInput)
         return
-    if position == "first" and description == "true negatives" and not userInput.isnumeric():
+    if nameOfSetOfResults == "first" and metricName == "true negatives" and not userInput.isnumeric():
         print("You need to enter an integer. Please try again.")
-        askForData(position, description)
+        askForData(nameOfSetOfResults, metricName)
 
     # False negatives, first data set
-    if position == "first" and description == "false negatives" and userInput.isnumeric():
-        falseNegatives1 = int(userInput)
+    if nameOfSetOfResults == "first" and metricName == "false negatives" and userInput.isnumeric():
+        falseNegativesFirstSet = int(userInput)
         return
-    if position == "first" and description == "false negatives" and not userInput.isnumeric():
+    if nameOfSetOfResults == "first" and metricName == "false negatives" and not userInput.isnumeric():
         print("You need to enter an integer. Please try again.")
-        askForData(position, description)
+        askForData(nameOfSetOfResults, metricName)
 
     # True positives, second data set
-    if position == "second" and description == "true positives" and userInput.isnumeric():
-        truePositives2 = int(userInput)
+    if nameOfSetOfResults == "second" and metricName == "true positives" and userInput.isnumeric():
+        truePositivesSecondSet = int(userInput)
         return
-    if position == "second" and description == "true positives" and not userInput.isnumeric():
+    if nameOfSetOfResults == "second" and metricName == "true positives" and not userInput.isnumeric():
         print("You need to enter an integer. Please try again.")
-        askForData(position, description)
+        askForData(nameOfSetOfResults, metricName)
 
     # False positives, second data set
-    if position == "second" and description == "false positives" and userInput.isnumeric():
-        falsePositives2 = int(userInput)
+    if nameOfSetOfResults == "second" and metricName == "false positives" and userInput.isnumeric():
+        falsePositivesSecondSet = int(userInput)
         return
-    if position == "second" and description == "false positives" and not userInput.isnumeric():
+    if nameOfSetOfResults == "second" and metricName == "false positives" and not userInput.isnumeric():
         print("You need to enter an integer. Please try again.")
-        askForData(position, description)
+        askForData(nameOfSetOfResults, metricName)
 
     # True negatives, second data set
-    if position == "second" and description == "true negatives" and userInput.isnumeric():
-        trueNegatives2 = int(userInput)
+    if nameOfSetOfResults == "second" and metricName == "true negatives" and userInput.isnumeric():
+        trueNegativesSecondSet = int(userInput)
         return
-    if position == "second" and description == "true negatives" and not userInput.isnumeric():
+    if nameOfSetOfResults == "second" and metricName == "true negatives" and not userInput.isnumeric():
         print("You need to enter an integer. Please try again.")
-        askForData(position, description)
+        askForData(nameOfSetOfResults, metricName)
 
     # False negatives, second data set
-    if position == "second" and description == "false negatives" and userInput.isnumeric():
-        falseNegatives2 = int(userInput)
+    if nameOfSetOfResults == "second" and metricName == "false negatives" and userInput.isnumeric():
+        falseNegativesSecondSet = int(userInput)
         return
-    if position == "second" and description == "false negatives" and not userInput.isnumeric():
+    if nameOfSetOfResults == "second" and metricName == "false negatives" and not userInput.isnumeric():
         print("You need to enter an integer. Please try again.")
-        askForData(position, description)
+        askForData(nameOfSetOfResults, metricName)
 
 
 # Function calls to ask user for data input
@@ -98,32 +99,36 @@ askForData("second", "false negatives")
 
 print("\nSUMMARY OF DATA ENTERED")
 print("-------------------------")
-print("First data set - true positives: ")
-print("First data set - false positives: ")
-print("First data set - true negatives: ")
-print("First data set - false negatives: ")
-print("Second data set - true positives: ")
-print("Second data set - false positives: ")
-print("Second data set - true negatives: ")
-print("Second data set - false negatives: ")
+print("First data set - true positives:", truePositivesFirstSet)
+print("First data set - false positives:", falsePositivesFirstSet)
+print("First data set - true negatives:", trueNegativesFirstSet)
+print("First data set - false negatives:", falseNegativesFirstSet)
+print("Second data set - true positives:", truePositivesSecondSet)
+print("Second data set - false positives:", falsePositivesSecondSet)
+print("Second data set - true negatives:", trueNegativesSecondSet)
+print("Second data set - false negatives:", falseNegativesSecondSet)
 
-#  Number of correct and incorrect predictions for each test.
+#  Number of correct and incorrect predictions for each set of results.
 
-correct1 = int(truePositives1) + int(trueNegatives1)  # Correct predictions for first set of data
-incorrect1 = int(falsePositives1) + int(falseNegatives1)  # Incorrect predictions for first set of data
-correct2 = int(truePositives2) + int(trueNegatives2)  # Correct predictions for second set of data
-incorrect2 = int(falsePositives2) + int(falseNegatives2)  # Incorrect predictions for second set of data
+# Correct predictions for first set of data
+correctFirstSet = int(truePositivesFirstSet) + int(trueNegativesFirstSet)
+# Incorrect predictions for first set of data
+incorrectFirstSet = int(falsePositivesFirstSet) + int(falseNegativesFirstSet)
+# Correct predictions for second set of data
+correctSecondSet = int(truePositivesSecondSet) + int(trueNegativesSecondSet)
+# Incorrect predictions for second set of data
+incorrectSecondSet = int(falsePositivesSecondSet) + int(falseNegativesSecondSet)
 
-print("\nFor the first set of data, there are", correct1, "correct predictions and", incorrect1,
+print("\nFor the first set of data, there are", correctFirstSet, "correct predictions and", incorrectFirstSet,
       "incorrect predictions.")
-print("\nFor the second set of data, there are", correct2, "correct predictions and", incorrect2,
+print("\nFor the second set of data, there are", correctSecondSet, "correct predictions and", incorrectSecondSet,
       "incorrect predictions.")
 
 # Contingency table
-table = [[correct1 + correct2, correct1 + incorrect2],
-         [incorrect1 + correct2, incorrect1 + incorrect2]]
+table = [[correctFirstSet + correctSecondSet, correctFirstSet + incorrectSecondSet],
+         [incorrectFirstSet + correctSecondSet, incorrectFirstSet + incorrectSecondSet]]
 
-# Calculate mcnemar test
+# Calculate mcNemar test
 result = mcnemar(table, exact=False, correction=True)
 
 # McNemar stats and interpretation
