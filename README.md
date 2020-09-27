@@ -8,6 +8,7 @@ This repository contains:
   sentences and fields relating to the sentences.
 - Files relating to testing the program, which are stored in the Program integrity test material folder.
 - A results spreadsheet.
+- The project report: MSc_Dissertation_Predicting_The_Formality_Of_Language.pdf
 
 USER NOTES
 ----------
