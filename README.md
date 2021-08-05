@@ -1,5 +1,4 @@
-For the final project of my MSc in Software Development at the University of Glasgow, I investigated using supervised machine learning to predict sentence formality 
-classifications.
+For the final project of my MSc in Software Development at the University of Glasgow, I investigated using supervised machine learning whether it was possible to predict for each sentence in a corpus of sentences whether humans had determined that sentence to be formal or informal in nature.
 
 This repository contains:
 
